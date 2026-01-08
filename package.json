@@ -1,0 +1,73 @@
+{
+	"name": "@zokugun/tsc-leda",
+	"description": "CLI utility compiling (with `tsc`) and preparing TS projects for dual ESM/CJS distribution",
+	"version": "0.0.0",
+	"author": {
+		"name": "Baptiste Augrain",
+		"email": "daiyam@zokugun.org"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/zokugun/tsc-leda",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/zokugun/tsc-leda.git"
+	},
+	"bugs": {
+		"url": "https://github.com/zokugun/tsc-leda/discussions/categories/issue-triage"
+	},
+	"type": "module",
+	"bin": {
+		"tsc-leda": "bin/tsc-leda"
+	},
+	"scripts": {
+		"commit": "cz",
+		"compile": "tsc -p src",
+		"lint": "xo",
+		"lint:fix": "xo --fix",
+		"postinstall": "patch-package",
+		"prepack": "npm run compile",
+		"prepare": "husky; fixpack || true",
+		"release": "release-it",
+		"test": "vitest run",
+		"watch:source": "tsc-watch -p src",
+		"watch:test": "vitest"
+	},
+	"dependencies": {
+		"@zokugun/is-it-type": "^0.4.0",
+		"@zokugun/xtry": "^0.6.3",
+		"ansi-colors": "^4.1.3",
+		"cli-spinners": "^3.3.0",
+		"commander": "^13.1.0",
+		"enquirer": "^2.4.1",
+		"execa": "^9.5.2",
+		"fs-extra": "^11.3.3",
+		"globby": "^16.1.0",
+		"log-update": "^7.0.2",
+		"patch-package": "^8.0.0",
+		"yaml": "^2.8.2"
+	},
+	"devDependencies": {
+		"@commitlint/cli": "^19.7.1",
+		"@commitlint/config-conventional": "^19.7.1",
+		"@types/fs-extra": "^11.0.4",
+		"@types/node": "^20.14.8",
+		"commitizen": "^4.3.1",
+		"fixpack": "^4.0.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.4",
+		"release-it": "^18.1.2",
+		"tsc-watch": "^6.3.0",
+		"typescript": "^5.7.3",
+		"vitest": "^4.0.16",
+		"xo": "0.60.0"
+	},
+	"peerDependencies": {
+		"typescript": "*"
+	},
+	"keywords": [
+		"cjs",
+		"commonjs",
+		"esm",
+		"tsc"
+	]
+}
