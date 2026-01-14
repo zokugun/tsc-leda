@@ -9,6 +9,7 @@ import { renameJS } from '../renames/rename-js.js';
 import { replaceCJS } from '../renames/replace-cjs.js';
 import { replaceCTS } from '../renames/replace-cts.js';
 import { replaceMJS } from '../renames/replace-mjs.js';
+import { replaceMTS } from '../renames/replace-mts.js';
 import { type Config } from '../types.js';
 import * as logger from '../utils/logger.js';
 
@@ -99,5 +100,5 @@ async function generateEsmFiles(root: string, config: Config, tsconfigFile: stri
 	await execa('npx', ['tsc', '-p', tsconfigFile, '--declaration', 'true', '--outDir', outDir, '--module', 'node16'], { cwd: root, stdio: 'inherit' });
 
 	await renameJS(outDir, '.mjs', replaceMJS);
-	await renameDTS(outDir, '.d.mts', replaceMJS);
+	await renameDTS(outDir, '.d.mts', replaceMTS);
 }
