@@ -7,7 +7,7 @@
 		],
 
 		/* Modules */
-		"module": "nodenext",								/* Specify what module code is generated. */
+		"module": "node16",								/* Specify what module code is generated. */
 		/* Basic Options */
 		// "allowJs": false,							/* Allow javascript files to be compiled. */
 		// "checkJs": false,							/* Report errors in '.js' files. */
@@ -48,7 +48,7 @@
 		// "noPropertyAccessFromIndexSignature": false,	/* Require undeclared properties from index signatures to use element accesses. */
 
 		/* Module Resolution Options */
-		// "moduleResolution": "node",					/* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+		"moduleResolution": "node16",					/* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
 		// "baseUrl": "",								/* Specify the base directory to resolve non-relative module names. */
 		// "paths": {},									/* Specify a set of entries that re-map imports to additional lookup locations. */
 		// "rootDirs": [],								/* Allow multiple folders to be treated as one when resolving modules. */
