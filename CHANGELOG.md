@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.4 | 2026-01-15
+- `node18` becomes the minimal supported version
+
 ## v0.1.3 | 2026-01-15
 - changing target of the compilation to `node16`
 
