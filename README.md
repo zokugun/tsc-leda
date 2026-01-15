@@ -17,13 +17,18 @@ Features
 - Update `package.json` exports and types mappings to reflect generated outputs
 - Small, focused CLI commands for simple automation
 
+Requirement
+-----------
+
+- Node.js v18.20+
+
 Installation
 ------------
 
 Install locally or run with `npx`:
 
 ```bash
-npm install @zokugun/tsc-leda --save-dev
+npm add -D @zokugun/tsc-leda
 # or
 npx @zokugun/tsc-leda <command>
 ```
@@ -79,10 +84,10 @@ Commands
 
 Run command help via `npx tsc-leda --help`.
 
-Contributing
-------------
+Contributions
+-------------
 
-Contributions are welcome. Please:
+Contributions are most welcome. Please:
 
 - Open issues and feature requests under the repository discussions.
 - Follow the `CONTRIBUTING.md`.

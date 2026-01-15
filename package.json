@@ -15,9 +15,12 @@
 	"bugs": {
 		"url": "https://github.com/zokugun/tsc-leda/discussions/categories/issue-triage"
 	},
+	"engines": {
+		"node": ">=18.20"
+	},
 	"type": "module",
 	"bin": {
-		"tsc-leda": "bin/tsc-leda.js"
+		"tsc-leda": "bin/tsc-leda"
 	},
 	"scripts": {
 		"commit": "cz",
