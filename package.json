@@ -17,7 +17,7 @@
 	},
 	"type": "module",
 	"bin": {
-		"tsc-leda": "bin/tsc-leda"
+		"tsc-leda": "bin/tsc-leda.js"
 	},
 	"scripts": {
 		"commit": "cz",
