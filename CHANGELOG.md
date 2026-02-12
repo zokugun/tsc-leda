@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.5 | 2026-02-12
+- update dependencies and scripts
+
 ## v0.1.4 | 2026-01-15
 - `node18` becomes the minimal supported version
 
