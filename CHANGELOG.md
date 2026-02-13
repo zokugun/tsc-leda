@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.2.0 | 2026-02-13
+- replace inline imports in `.d.js` files
+
 ## v0.1.6 | 2026-02-13
 - correctly replace all local imports
 
