@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.6 | 2026-02-13
+- correctly replace all local imports
+
 ## v0.1.5 | 2026-02-12
 - update dependencies and scripts
 
