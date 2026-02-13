@@ -38,7 +38,7 @@
 		"watch:test": "tsc-watch -p test"
 	},
 	"dependencies": {
-		"@zokugun/is-it-type": "^0.5.1",
+		"@zokugun/is-it-type": "^0.5.2",
 		"@zokugun/xtry": "^0.10.1",
 		"ansi-colors": "^4.1.3",
 		"cli-spinners": "^3.4.0",
