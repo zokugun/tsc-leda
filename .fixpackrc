@@ -23,7 +23,7 @@
 		"dependencies",
 		"devDependencies",
 		"optionalDependencies",
-		"peerDependencies",
+		"overrides",
 		"keywords"
 	],
 	"finalNewLine": true
