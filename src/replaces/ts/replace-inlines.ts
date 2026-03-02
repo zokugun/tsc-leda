@@ -9,7 +9,7 @@ type InlineImportMatch = {
 	type: boolean;
 };
 
-const INLINE_REGEX = /(?:(:|=>)\s+)?\b(import\(("[^"]*")\)\.(\w+))/g;
+const INLINE_REGEX = /(?:(:|=>)\s+)?\b(import\(("[^"]*"|'[^']*')\)\.(\w+))/g;
 const STATEMENT_REGEX = /import (?:type )?{ ([^}]*) } from/g;
 
 export function replaceInlines(content: string): string {
