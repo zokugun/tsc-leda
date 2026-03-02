@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.0 | 2026-03-02
+- add required arguments for `tsc`
+- correctly replace inline imports with single quotes
+- make it work on Node.js 18.x
+
 ## v0.2.0 | 2026-02-13
 - replace inline imports in `.d.js` files
 
