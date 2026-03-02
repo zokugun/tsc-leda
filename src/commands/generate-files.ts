@@ -97,7 +97,7 @@ async function generateCjsFiles(root: string, config: Config, tsconfigFile: stri
 async function generateEsmFiles(root: string, config: Config, tsconfigFile: string): Promise<void> {
 	const outDir = path.join(config.outDir, 'esm');
 
-	await execa('npx', ['tsc', '-p', tsconfigFile, '--declaration', 'true', '--outDir', outDir, '--module', 'node16', '--moduleResolution', 'node16'], { cwd: root, stdio: 'inherit' });
+	await execa('npx', ['tsc', '-p', tsconfigFile, '--declaration', 'true', '--outDir', outDir, '--module', 'es2022', '--moduleResolution', 'bundler'], { cwd: root, stdio: 'inherit' });
 
 	await renameJS(outDir, '.mjs', replaceMJS);
 	await renameDTS(outDir, '.d.mts', replaceMTS);
