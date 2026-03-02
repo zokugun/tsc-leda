@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.1 | 2026-03-03
+- allow both double or single quotes
+- generate ESM even if the package isn't a module
+- replace log dependency to support Node.js 18.x
+
 ## v0.3.0 | 2026-03-02
 - add required arguments for `tsc`
 - correctly replace inline imports with single quotes
