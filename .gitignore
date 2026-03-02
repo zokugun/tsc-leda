@@ -4,3 +4,4 @@
 /sample/node_modules/
 /sample/lib/
 /sample/package-lock.json
+/coverage/
