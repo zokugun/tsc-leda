@@ -1,0 +1,19 @@
+{
+	"name": "sample",
+	"description": "",
+	"version": "0.1.0",
+	"author": {
+		"name": "Baptiste Augrain",
+		"email": "daiyam@zokugun.org"
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "npm run clean && npm run build:lib",
+		"build:lib": "tsc-leda generate",
+		"clean": "rimraf lib"
+	},
+	"dependencies": {
+		"@zokugun/tsc-leda": "file:..",
+		"rimraf": "^5.0.10"
+	}
+}
