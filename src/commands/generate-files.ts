@@ -6,10 +6,10 @@ import fse from 'fs-extra';
 import { loadConfig } from '../config/load-config.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
-import { replaceCJS } from '../renames/replace-cjs.js';
-import { replaceCTS } from '../renames/replace-cts.js';
-import { replaceMJS } from '../renames/replace-mjs.js';
-import { replaceMTS } from '../renames/replace-mts.js';
+import { replaceCJS } from '../replaces/js/replace-cjs.js';
+import { replaceMJS } from '../replaces/js/replace-mjs.js';
+import { replaceCTS } from '../replaces/ts/replace-cts.js';
+import { replaceMTS } from '../replaces/ts/replace-mts.js';
 import { type Config } from '../types.js';
 import * as logger from '../utils/logger.js';
 
