@@ -1,8 +1,8 @@
 import path from 'node:path';
 import process from 'node:process';
-import { err, ok, stringifyError, xtryAsync, type Result } from '@zokugun/xtry';
+import fse, { type FsResult } from '@zokugun/fs-extra-plus/async';
+import { type AsyncDResult, err, OK, ok, stringifyError, xtryAsync } from '@zokugun/xtry';
 import { execa } from 'execa';
-import fse from 'fs-extra';
 import { loadConfig } from '../config/load-config.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
@@ -64,13 +64,17 @@ export async function generateFiles(_options: {}): Promise<void> {
 	logger.finish(duration);
 }
 
-async function prepareOutput(root: string, config: Config): Promise<void> {
+async function prepareOutput(root: string, config: Config): Promise<FsResult<void>> {
 	const outDir = path.join(root, config.outDir);
+	const result = await fse.emptyDir(outDir);
+	if(result.fails) {
+		return result;
+	}
 
-	return fse.emptyDir(outDir);
+	return OK;
 }
 
-async function findTsconfigFile(root: string, config: Config): Promise<Result<string, string>> {
+async function findTsconfigFile(root: string, config: Config): AsyncDResult<string> {
 	let sourceDir = path.join(root, config.srcDir);
 
 	do {
@@ -85,20 +89,38 @@ async function findTsconfigFile(root: string, config: Config): Promise<Result<st
 	return err('tsconfig.json not found');
 }
 
-async function generateCjsFiles(root: string, config: Config, tsconfigFile: string): Promise<void> {
+async function generateCjsFiles(root: string, config: Config, tsconfigFile: string): AsyncDResult {
 	const outDir = path.join(config.outDir, 'cjs');
 
 	await execa('npx', ['tsc', '-p', tsconfigFile, '--declaration', 'true', '--outDir', outDir, '--module', 'commonjs', '--moduleResolution', 'node', '--esModuleInterop', 'true'], { cwd: root, stdio: 'inherit' });
 
-	await renameJS(outDir, '.cjs', replaceCJS);
-	await renameDTS(outDir, '.d.cts', replaceCTS);
+	const jsResult = await renameJS(outDir, '.cjs', replaceCJS);
+	if(jsResult.fails) {
+		return jsResult;
+	}
+
+	const dtsResult = await renameDTS(outDir, '.d.cts', replaceCTS);
+	if(dtsResult.fails) {
+		return dtsResult;
+	}
+
+	return OK;
 }
 
-async function generateEsmFiles(root: string, config: Config, tsconfigFile: string): Promise<void> {
+async function generateEsmFiles(root: string, config: Config, tsconfigFile: string): AsyncDResult {
 	const outDir = path.join(config.outDir, 'esm');
 
 	await execa('npx', ['tsc', '-p', tsconfigFile, '--declaration', 'true', '--outDir', outDir, '--module', 'es2022', '--moduleResolution', 'bundler'], { cwd: root, stdio: 'inherit' });
 
-	await renameJS(outDir, '.mjs', replaceMJS);
-	await renameDTS(outDir, '.d.mts', replaceMTS);
+	const jsResult = await renameJS(outDir, '.mjs', replaceMJS);
+	if(jsResult.fails) {
+		return jsResult;
+	}
+
+	const dtsResult = await renameDTS(outDir, '.d.mts', replaceMTS);
+	if(dtsResult.fails) {
+		return dtsResult;
+	}
+
+	return OK;
 }

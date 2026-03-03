@@ -1,7 +1,7 @@
 import path from 'node:path';
-import { isArray, isNodeError, isNonBlankString, isRecord } from '@zokugun/is-it-type';
+import fse from '@zokugun/fs-extra-plus/async';
+import { isArray, isNonBlankString, isRecord } from '@zokugun/is-it-type';
 import { err, ok, type Result, stringifyError, xtrySync, yerr, yresSync, type YResult } from '@zokugun/xtry';
-import fse from 'fs-extra';
 import YAML from 'yaml';
 import { type Config } from '../types.js';
 
@@ -37,23 +37,23 @@ export async function loadConfig(fileRoot: string): Promise<Result<Config, strin
 } // }}}
 
 async function tryReadConfigFile(filename: string, root: string, name: string, type?: 'yaml' | 'json'): Promise<YResult<Config, string, 'not-found'>> { // {{{
-	try {
-		const content = await fse.readFile(filename, 'utf8');
-		const parsed = parseConfigContent(content, type);
+	const content = await fse.readFile(filename, 'utf8');
 
-		if(parsed.fails) {
-			return err(`Failed to parse ${name} from package: ${parsed.error}`);
-		}
-
-		return yresSync(normalizeConfig(parsed.value, root, name));
-	}
-	catch (error) {
-		if(isNodeError(error) && error.code === 'ENOENT') {
+	if(content.fails) {
+		if(content.error.code === 'ENOENT') {
 			return yerr('not-found');
 		}
 
-		return err(`Failed to read ${name} from package: ${stringifyError(error)}`);
+		return err(`Failed to read ${name} from package: ${stringifyError(content.error)}`);
 	}
+
+	const parsed = parseConfigContent(content.value, type);
+
+	if(parsed.fails) {
+		return err(`Failed to parse ${name} from package: ${parsed.error}`);
+	}
+
+	return yresSync(normalizeConfig(parsed.value, root, name));
 } // }}}
 
 function parseConfigContent(content: string, type?: 'json' | 'yaml'): Result<unknown, string> { // {{{
