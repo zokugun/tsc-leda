@@ -1,15 +1,16 @@
 import process from 'node:process';
+import logger from '@zokugun/cli-utils/logger';
 import { isString } from '@zokugun/is-it-type';
 import { stringifyError, xtryAsync } from '@zokugun/xtry';
 import { loadConfig } from '../config/load-config.js';
 import { loadPackage } from '../package/load-package.js';
 import { writePackage } from '../package/write-package.js';
 import { type Config } from '../types.js';
-import * as logger from '../utils/logger.js';
 
 export async function updatePackage(name: string | undefined): Promise<void> {
-	const start = Date.now();
 	const root = process.cwd();
+
+	logger.begin();
 
 	let done = logger.step('Loading configuration');
 
@@ -58,9 +59,7 @@ export async function updatePackage(name: string | undefined): Promise<void> {
 
 	done();
 
-	const duration = Math.ceil((Date.now() - start) / 1000);
-
-	logger.finish(duration);
+	logger.finish();
 }
 
 async function configureCommonJs(config: Config, packageJson: Record<string, unknown>): Promise<void> {

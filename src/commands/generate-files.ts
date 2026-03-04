@@ -1,5 +1,6 @@
 import path from 'node:path';
 import process from 'node:process';
+import logger from '@zokugun/cli-utils/logger';
 import fse, { type FsResult } from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, OK, ok, stringifyError, xtryAsync } from '@zokugun/xtry';
 import { execa } from 'execa';
@@ -11,11 +12,11 @@ import { replaceMJS } from '../replaces/js/replace-mjs.js';
 import { replaceCTS } from '../replaces/ts/replace-cts.js';
 import { replaceMTS } from '../replaces/ts/replace-mts.js';
 import { type Config } from '../types.js';
-import * as logger from '../utils/logger.js';
 
 export async function generateFiles(_options: {}): Promise<void> {
-	const start = Date.now();
 	const root = process.cwd();
+
+	logger.begin();
 
 	const done = logger.step('Loading configuration');
 
@@ -59,9 +60,7 @@ export async function generateFiles(_options: {}): Promise<void> {
 		done();
 	}
 
-	const duration = Math.ceil((Date.now() - start) / 1000);
-
-	logger.finish(duration);
+	logger.finish();
 }
 
 async function prepareOutput(root: string, config: Config): Promise<FsResult<void>> {
