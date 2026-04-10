@@ -7,7 +7,7 @@ import { loadPackage } from '../package/load-package.js';
 import { writePackage } from '../package/write-package.js';
 import { type Config } from '../types.js';
 
-export async function updatePackage(name: string | undefined): Promise<void> {
+export async function updatePackage(): Promise<void> {
 	const root = process.cwd();
 
 	logger.begin();
