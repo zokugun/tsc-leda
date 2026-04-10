@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.2 | 2026-04-10
+- use locked dependencies
+- use GitHub Environment to publish
+
 ## v0.3.1 | 2026-03-03
 - allow both double or single quotes
 - generate ESM even if the package isn't a module
