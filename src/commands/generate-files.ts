@@ -13,7 +13,7 @@ import { replaceCTS } from '../replaces/ts/replace-cts.js';
 import { replaceMTS } from '../replaces/ts/replace-mts.js';
 import { type Config } from '../types.js';
 
-export async function generateFiles(_options: {}): Promise<void> {
+export async function generateFiles(): Promise<void> {
 	const root = process.cwd();
 
 	logger.begin();
