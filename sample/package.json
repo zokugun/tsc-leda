@@ -10,6 +10,7 @@
 	"scripts": {
 		"build": "npm run clean && npm run build:lib",
 		"build:lib": "tsc-leda generate",
+		"build:package": "tsc-leda update-package",
 		"clean": "rimraf lib"
 	},
 	"dependencies": {

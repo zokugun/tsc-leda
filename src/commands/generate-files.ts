@@ -16,9 +16,9 @@ import { type Config } from '../types.js';
 export async function generateFiles(): Promise<void> {
 	const root = process.cwd();
 
-	logger.begin();
+	logger.beginTimer();
 
-	const done = logger.step('Loading configuration');
+	const done = logger.createStep('Loading configuration');
 
 	const configResult = await loadConfig(root);
 	if(configResult.fails) {
@@ -39,7 +39,7 @@ export async function generateFiles(): Promise<void> {
 	}
 
 	if(config.formats.cjs) {
-		const done = logger.step('Generating CommonJS');
+		const done = logger.createStep('Generating CommonJS');
 
 		const result = await xtryAsync(generateCjsFiles(root, config, tsconfigFile.value));
 		if(result.fails) {
@@ -50,7 +50,7 @@ export async function generateFiles(): Promise<void> {
 	}
 
 	if(config.formats.esm) {
-		const done = logger.step('Generating ESM');
+		const done = logger.createStep('Generating ESM');
 
 		const result = await xtryAsync(generateEsmFiles(root, config, tsconfigFile.value));
 		if(result.fails) {
@@ -60,7 +60,7 @@ export async function generateFiles(): Promise<void> {
 		done();
 	}
 
-	logger.finish();
+	logger.finishTimer();
 }
 
 async function prepareOutput(root: string, config: Config): Promise<FsResult<void>> {

@@ -10,9 +10,9 @@ import { type Config } from '../types.js';
 export async function updatePackage(): Promise<void> {
 	const root = process.cwd();
 
-	logger.begin();
+	logger.beginTimer();
 
-	let done = logger.step('Loading configuration');
+	let done = logger.createStep('Loading configuration');
 
 	const configResult = await loadConfig(root);
 	if(configResult.fails) {
@@ -22,44 +22,44 @@ export async function updatePackage(): Promise<void> {
 	const config = configResult.value;
 	done();
 
-	done = logger.step('Loading package.json');
+	done = logger.createStep('Loading package.json');
 
 	const packageResult = await loadPackage(root);
 	if(packageResult.fails) {
 		return logger.error(packageResult.error);
 	}
 
-	const packageJson = packageResult.value;
+	const pack = packageResult.value;
 
 	done();
 
-	done = logger.step('Preparing new package.json');
+	done = logger.createStep('Preparing new package.json');
 
-	delete packageJson.main;
-	delete packageJson.module;
-	delete packageJson.typesVersions;
-	packageJson.exports = {};
+	delete pack.data.main;
+	delete pack.data.module;
+	delete pack.data.typesVersions;
+	pack.data.exports = {};
 
 	if(config.formats.esm) {
-		await configureEsm(config, packageJson);
+		await configureEsm(config, pack.data);
 	}
 
 	if(config.formats.cjs) {
-		await configureCommonJs(config, packageJson);
+		await configureCommonJs(config, pack.data);
 	}
 
 	done();
 
-	done = logger.step('Writing package.json');
+	done = logger.createStep('Writing package.json');
 
-	const result = await xtryAsync(writePackage(root, packageJson));
+	const result = await xtryAsync(writePackage(root, pack));
 	if(result.fails) {
 		return logger.error(stringifyError(result.error));
 	}
 
 	done();
 
-	logger.finish();
+	logger.finishTimer();
 }
 
 async function configureCommonJs(config: Config, packageJson: Record<string, unknown>): Promise<void> {

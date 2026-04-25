@@ -1,11 +1,16 @@
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
+import { toEOL, toSpaces } from '@zokugun/text-line-utils';
 import { err, OK, type Result, stringifyError } from '@zokugun/xtry';
+import { type Package } from '../types.js';
 
-export async function writePackage(root: string, packageJson: Record<string, unknown>): Promise<Result<void, string>> {
-	const content = JSON.stringify(packageJson, null, '\t');
+export async function writePackage(root: string, pack: Package): Promise<Result<void, string>> {
+	const result = await fse.writeJSON(path.join(root, 'package.json'), pack.data, {
+		EOL: toEOL(pack.eol),
+		finalEOL: pack.finalEOL,
+		spaces: toSpaces(pack.indent),
+	});
 
-	const result = await fse.writeJSON(path.join(root, 'package.json'), content);
 	if(result.fails) {
 		return err(stringifyError(result.error));
 	}
