@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.0 | 2026-04-25
+- detect the EOL and indentation style, then use them when updating `package.json`
+
 ## v0.3.2 | 2026-04-10
 - use locked dependencies
 - use GitHub Environment to publish
