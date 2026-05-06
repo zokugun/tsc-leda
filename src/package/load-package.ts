@@ -13,7 +13,7 @@ export async function loadPackage(root: string): AsyncDResult<Package> {
 		return err(`Failed to read package.json: ${stringifyError(result.error)}`);
 	}
 
-	const content = fse.utils.stripBom(result.value);
+	const content = fse.stripBom(result.value);
 	const data = parseJSON(content);
 
 	if(data.fails) {
