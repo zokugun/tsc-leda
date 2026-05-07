@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.1 | 2026-05-07
+- don't display spinners in CI
+
 ## v0.4.0 | 2026-04-25
 - detect the EOL and indentation style, then use them when updating `package.json`
 
