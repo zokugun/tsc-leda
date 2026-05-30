@@ -22,7 +22,7 @@ export async function generateFiles(): Promise<void> {
 
 	const configResult = await loadConfig(root);
 	if(configResult.fails) {
-		return logger.error(configResult.error);
+		logger.fatal(configResult.error);
 	}
 
 	const config = configResult.value;
@@ -30,12 +30,12 @@ export async function generateFiles(): Promise<void> {
 
 	const result = await xtryAsync(prepareOutput(root, config));
 	if(result.fails) {
-		return logger.error(stringifyError(result.error));
+		logger.fatal(stringifyError(result.error));
 	}
 
 	const tsconfigFile = await findTsconfigFile(root, config);
 	if(tsconfigFile.fails) {
-		return logger.error(tsconfigFile.error);
+		logger.fatal(tsconfigFile.error);
 	}
 
 	if(config.formats.cjs) {
@@ -43,7 +43,7 @@ export async function generateFiles(): Promise<void> {
 
 		const result = await xtryAsync(generateCjsFiles(root, config, tsconfigFile.value));
 		if(result.fails) {
-			return logger.error(stringifyError(result.error));
+			logger.fatal(stringifyError(result.error));
 		}
 
 		done();
@@ -54,7 +54,7 @@ export async function generateFiles(): Promise<void> {
 
 		const result = await xtryAsync(generateEsmFiles(root, config, tsconfigFile.value));
 		if(result.fails) {
-			return logger.error(stringifyError(result.error));
+			logger.fatal(stringifyError(result.error));
 		}
 
 		done();
