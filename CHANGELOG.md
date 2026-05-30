@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.2 | 2026-05-30
+- `tsc` errors now terminate the process with fatal exceptions
+
 ## v0.4.1 | 2026-05-07
 - don't display spinners in CI
 
