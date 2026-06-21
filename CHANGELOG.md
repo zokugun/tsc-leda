@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.4.3 | 2026-06-21
+- support newly `allowScripts` property in `package.json`
+
 ## v0.4.2 | 2026-05-30
 - `tsc` errors now terminate the process with fatal exceptions
 
