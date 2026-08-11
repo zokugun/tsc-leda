@@ -44,7 +44,7 @@
 	},
 	"dependencies": {
 		"@zokugun/cli-utils": "0.3.3",
-		"@zokugun/fs-extra-plus": "0.4.1",
+		"@zokugun/fs-extra-plus": "0.6.1",
 		"@zokugun/is-it-type": "0.8.1",
 		"@zokugun/text-line-utils": "0.1.0",
 		"@zokugun/xtry": "0.11.6",

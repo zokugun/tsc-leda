@@ -1,6 +1,6 @@
 import { Command } from '@zokugun/cli-utils/commander';
 import pkg from '../package.json' with { type: 'json' };
-import { generateFiles } from './commands/generate-files.js';
+import { generateFiles } from './commands/generate-files/generate-files.js';
 import { updatePackage } from './commands/update-package.js';
 
 const program = new Command();
