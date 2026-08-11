@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.1 | 2026-08-11
+- exclude `.d.ts` files found outside the project
+
 ## v0.5.0 | 2026-08-11
 - copy solo `.d.ts` files
 
