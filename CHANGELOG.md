@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.5.0 | 2026-08-11
+- copy solo `.d.ts` files
+
 ## v0.4.3 | 2026-06-21
 - support newly `allowScripts` property in `package.json`
 
