@@ -13,6 +13,10 @@ export async function findDtsFiles(root: string, tsConfigFile: string): AsyncDRe
 	const dtsFiles: string[] = [];
 
 	for(const path of stdout) {
+		if(!path.startsWith(root)) {
+			continue
+		}
+
 		const file = path.slice(Math.max(0, root.length + 1));
 
 		if(file.startsWith(modulesPrefix)) {
