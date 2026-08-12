@@ -81,8 +81,8 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 
 	const sourceDir = isNonBlankString(data.srcDir) ? data.srcDir as string : 'src';
 	const outDir = isNonBlankString(data.outDir) ? data.outDir as string : 'dist';
-
 	const entries: Record<string, string> = {};
+
 	if(isRecord(data.entry)) {
 		for(const [key, value] of Object.entries(data.entry)) {
 			if(isNonBlankString(key) && isNonBlankString(value)) {
@@ -95,6 +95,7 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 	}
 
 	const formats = { cjs: false, esm: false };
+
 	if(isArray(data.format)) {
 		for(const format of data.format) {
 			if(format === 'cjs') {
@@ -114,10 +115,33 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 		}
 	}
 
+	const tsModule = { cjs: 'commonjs', esm: 'es2022' };
+
+	if(isRecord(data.tsModule)) {
+		let { cjs, esm } = data.tsModule;
+
+		if(isNonBlankString<string>(cjs)) {
+			cjs = cjs.trim().toLowerCase();
+
+			if(cjs === 'commonjs' || cjs === 'node16' || cjs === 'node18' || cjs === 'node20' || cjs === 'nodenext') {
+				tsModule.cjs = cjs;
+			}
+		}
+
+		if(isNonBlankString<string>(esm)) {
+			esm = esm.trim().toLowerCase();
+
+			if(esm === 'es2015' || esm === 'es2020' || esm === 'es2022' || esm === 'esnext') {
+				tsModule.esm = esm;
+			}
+		}
+	}
+
 	return ok({
 		srcDir: sourceDir,
 		outDir,
 		entries,
 		formats,
+		tsModule,
 	});
 } // }}}

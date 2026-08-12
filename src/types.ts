@@ -8,6 +8,10 @@ export type Config = {
 	};
 	srcDir: string;
 	outDir: string;
+	tsModule: {
+		cjs: string;
+		esm: string;
+	};
 };
 
 export type Package = {

@@ -11,7 +11,7 @@ import { copySoloDTS } from './copy-solo-dts.js';
 export async function generateEsmFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[]): AsyncDResult {
 	const outDir = fse.join(config.outDir, 'esm');
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', 'true', '--outDir', outDir, '--module', 'es2022', '--moduleResolution', 'bundler'], { cwd: root, stdio: 'inherit' });
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', 'true', '--outDir', outDir, '--module', config.tsModule.esm, '--moduleResolution', 'bundler'], { cwd: root, stdio: 'inherit' });
 	if(execResult.fails) {
 		return err(stringifyError(execResult.error));
 	}
