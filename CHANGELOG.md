@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.0 | 2026-08-12
+- add `tsModule` option
+
 ## v0.5.1 | 2026-08-11
 - exclude `.d.ts` files found outside the project
 
