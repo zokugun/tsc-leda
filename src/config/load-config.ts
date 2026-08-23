@@ -1,11 +1,12 @@
+import type { Config } from '../types.js';
+
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
 import { isArray, isNonBlankString, isRecord } from '@zokugun/is-it-type';
 import { err, ok, type Result, stringifyError, xtrySync, yerr, yresSync, type YResult } from '@zokugun/xtry';
 import YAML from 'yaml';
-import { type Config } from '../types.js';
 
-const CONFIG_FILES: Array<{ name: string; type?: 'yaml' | 'json' }> = [
+const CONFIG_FILES: Array<{ name: string; type?: 'json' | 'yaml' }> = [
 	{
 		name: '.tscledarc.yml',
 		type: 'yaml',
@@ -34,44 +35,6 @@ export async function loadConfig(fileRoot: string): Promise<Result<Config, strin
 	}
 
 	return err(`Directory ${fileRoot} must include one of ${CONFIG_FILES.map(({ name }) => name).join(', ')} at its root.`);
-} // }}}
-
-async function tryReadConfigFile(filename: string, root: string, name: string, type?: 'yaml' | 'json'): Promise<YResult<Config, string, 'not-found'>> { // {{{
-	const content = await fse.readFile(filename, 'utf8');
-
-	if(content.fails) {
-		if(content.error.code === 'ENOENT') {
-			return yerr('not-found');
-		}
-
-		return err(`Failed to read ${name} from package: ${stringifyError(content.error)}`);
-	}
-
-	const parsed = parseConfigContent(content.value, type);
-
-	if(parsed.fails) {
-		return err(`Failed to parse ${name} from package: ${parsed.error}`);
-	}
-
-	return yresSync(normalizeConfig(parsed.value, root, name));
-} // }}}
-
-function parseConfigContent(content: string, type?: 'json' | 'yaml'): Result<unknown, string> { // {{{
-	if(type === 'json') {
-		return xtrySync(() => JSON.parse(content) as unknown, stringifyError);
-	}
-
-	if(type === 'yaml') {
-		return xtrySync(() => YAML.parse(content) as unknown, stringifyError);
-	}
-
-	let result = xtrySync(() => JSON.parse(content) as unknown, stringifyError);
-
-	if(result.fails) {
-		result = xtrySync(() => YAML.parse(content) as unknown, stringifyError);
-	}
-
-	return result;
 } // }}}
 
 function normalizeConfig(data: unknown, root: string, source: string): Result<Config, string> { // {{{
@@ -138,10 +101,48 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 	}
 
 	return ok({
-		srcDir: sourceDir,
-		outDir,
 		entries,
 		formats,
+		outDir,
+		srcDir: sourceDir,
 		tsModule,
 	});
+} // }}}
+
+function parseConfigContent(content: string, type?: 'json' | 'yaml'): Result<unknown, string> { // {{{
+	if(type === 'json') {
+		return xtrySync(() => JSON.parse(content) as unknown, stringifyError);
+	}
+
+	if(type === 'yaml') {
+		return xtrySync(() => YAML.parse(content) as unknown, stringifyError);
+	}
+
+	let result = xtrySync(() => JSON.parse(content) as unknown, stringifyError);
+
+	if(result.fails) {
+		result = xtrySync(() => YAML.parse(content) as unknown, stringifyError);
+	}
+
+	return result;
+} // }}}
+
+async function tryReadConfigFile(filename: string, root: string, name: string, type?: 'json' | 'yaml'): Promise<YResult<Config, string, 'not-found'>> { // {{{
+	const content = await fse.readFile(filename, 'utf8');
+
+	if(content.fails) {
+		if(content.error.code === 'ENOENT') {
+			return yerr('not-found');
+		}
+
+		return err(`Failed to read ${name} from package: ${stringifyError(content.error)}`);
+	}
+
+	const parsed = parseConfigContent(content.value, type);
+
+	if(parsed.fails) {
+		return err(`Failed to parse ${name} from package: ${parsed.error}`);
+	}
+
+	return yresSync(normalizeConfig(parsed.value, root, name));
 } // }}}

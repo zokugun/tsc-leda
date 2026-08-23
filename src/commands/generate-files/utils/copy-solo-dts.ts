@@ -1,7 +1,8 @@
 
+import type { Config } from '../../../types.js';
+
 import fse from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
-import type { Config } from '../../../types.js';
 
 export async function copySoloDTS(dtsFiles: string[], newDtsExtname: string, newTsExtname: string, tsCode: string, root: string, outDir: string, config: Config): AsyncDResult {
 	for(const file of dtsFiles) {

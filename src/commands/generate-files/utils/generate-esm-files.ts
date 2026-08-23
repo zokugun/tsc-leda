@@ -1,12 +1,14 @@
+import type { Config } from '../../../types.js';
+
 import fse from '@zokugun/fs-extra-plus/path';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
-import type { Config } from '../../../types.js';
+
+import { copySoloDTS } from './copy-solo-dts.js';
 import { exec } from '../../../utils/exec.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
 import { replaceMJS } from '../replaces/js/replace-mjs.js';
 import { replaceMTS } from '../replaces/ts/replace-mts.js';
-import { copySoloDTS } from './copy-solo-dts.js';
 
 export async function generateEsmFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[]): AsyncDResult {
 	const outDir = fse.join(config.outDir, 'esm');

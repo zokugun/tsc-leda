@@ -60,8 +60,6 @@
 		// "experimentalDecorators": false,				/* Enables experimental support for ES7 decorators. */
 		// "emitDecoratorMetadata": false,				/* Emit design-type metadata for decorated declarations in source files. */
 
-
-
 		/* Advanced Options */
 		"skipLibCheck": true,							/* Skip type checking all .d.ts files. */
 		"forceConsistentCasingInFileNames": true,		/* Ensure that casing is correct in imports. */

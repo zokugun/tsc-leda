@@ -1,5 +1,6 @@
 import fse from '@zokugun/fs-extra-plus/path';
 import { type AsyncDResult, err, ok, stringifyError } from '@zokugun/xtry';
+
 import { exec } from '../../../utils/exec.js';
 
 export async function findDtsFiles(root: string, tsConfigFile: string): AsyncDResult<string[]> {
@@ -14,7 +15,7 @@ export async function findDtsFiles(root: string, tsConfigFile: string): AsyncDRe
 
 	for(const path of stdout) {
 		if(!path.startsWith(root)) {
-			continue
+			continue;
 		}
 
 		const file = path.slice(Math.max(0, root.length + 1));

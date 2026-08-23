@@ -1,11 +1,13 @@
+import type { Config } from '../types.js';
+
 import process from 'node:process';
 import logger from '@zokugun/cli-utils/logger';
 import { isString } from '@zokugun/is-it-type';
 import { stringifyError, xtryAsync } from '@zokugun/xtry';
+
 import { loadConfig } from '../config/load-config.js';
 import { loadPackage } from '../package/load-package.js';
 import { writePackage } from '../package/write-package.js';
-import { type Config } from '../types.js';
 
 export async function updatePackage(): Promise<void> {
 	const root = process.cwd();
@@ -16,7 +18,7 @@ export async function updatePackage(): Promise<void> {
 
 	const configResult = await loadConfig(root);
 	if(configResult.fails) {
-		return logger.error(configResult.error);
+		logger.fatal(configResult.error);
 	}
 
 	const config = configResult.value;
@@ -26,7 +28,7 @@ export async function updatePackage(): Promise<void> {
 
 	const packageResult = await loadPackage(root);
 	if(packageResult.fails) {
-		return logger.error(packageResult.error);
+		logger.fatal(packageResult.error);
 	}
 
 	const pack = packageResult.value;
@@ -54,7 +56,7 @@ export async function updatePackage(): Promise<void> {
 
 	const result = await xtryAsync(writePackage(root, pack));
 	if(result.fails) {
-		return logger.error(stringifyError(result.error));
+		logger.fatal(stringifyError(result.error));
 	}
 
 	done();

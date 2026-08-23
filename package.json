@@ -56,6 +56,14 @@
 		"@commitlint/cli": "20.5.3",
 		"@commitlint/config-conventional": "20.5.3",
 		"@types/node": "20.19.43",
+		"@zokugun/eslint-config": "0.2.1",
+		"@zokugun/eslint-config-data": "0.2.1",
+		"@zokugun/eslint-config-glossary": "0.2.0",
+		"@zokugun/eslint-config-js": "0.2.1",
+		"@zokugun/eslint-config-md": "0.4.1",
+		"@zokugun/eslint-config-nodejs": "0.2.0",
+		"@zokugun/eslint-config-style": "0.3.1",
+		"@zokugun/eslint-config-ts": "0.3.1",
 		"eslint": "10.8.1",
 		"fixpack": "4.0.0",
 		"husky": "9.1.7",
@@ -75,7 +83,8 @@
 		}
 	},
 	"allowScripts": {
-		"@zokugun/cli-utils": true
+		"@zokugun/cli-utils": true,
+		"unrs-resolver": true
 	},
 	"keywords": [
 		"cjs",

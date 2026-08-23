@@ -1,17 +1,19 @@
+import type { Config } from '../../../types.js';
+
 import fse from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
-import type { Config } from '../../../types.js';
+
+import { copySoloDTS } from './copy-solo-dts.js';
 import { exec } from '../../../utils/exec.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
 import { replaceCJS } from '../replaces/js/replace-cjs.js';
 import { replaceCTS } from '../replaces/ts/replace-cts.js';
-import { copySoloDTS } from './copy-solo-dts.js';
 
 const EMPTY_MODULE = `"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 `;
-const TYPE_REGEX = /"type":\s*"module"/
+const TYPE_REGEX = /"type":\s*"module"/;
 
 export async function generateCjsFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[]): AsyncDResult {
 	const outDir = fse.join(config.outDir, 'cjs');
@@ -36,7 +38,7 @@ export async function generateCjsFiles(root: string, config: Config, tsConfigFil
 		if(match) {
 			restorePackage = true;
 
-			const newPackage = originalPackage.slice(0, match.index) + '"type": "commonjs"' + originalPackage.slice(match.index + match.at(0)!.length);
+			const newPackage = `${originalPackage.slice(0, match.index)}"type": "commonjs"${originalPackage.slice(match.index + match.at(0)!.length)}`;
 
 			const result = await fse.writeFile(file, newPackage, 'utf8');
 			if(result.fails) {

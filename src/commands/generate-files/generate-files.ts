@@ -1,12 +1,13 @@
 import process from 'node:process';
 import logger from '@zokugun/cli-utils/logger';
 import { stringifyError } from '@zokugun/xtry';
-import { loadConfig } from '../../config/load-config.js';
+
 import { findDtsFiles } from './utils/find-dts-files.js';
 import { findTsConfigFile } from './utils/find-ts-config-file.js';
 import { generateCjsFiles } from './utils/generate-cjs-files.js';
 import { generateEsmFiles } from './utils/generate-esm-files.js';
 import { prepareOutput } from './utils/prepare-output.js';
+import { loadConfig } from '../../config/load-config.js';
 
 export async function generateFiles(): Promise<void> {
 	const root = process.cwd();

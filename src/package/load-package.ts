@@ -1,9 +1,10 @@
+import type { Package } from '../types.js';
+
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
 import { isNonEmptyRecord } from '@zokugun/is-it-type';
 import { detectEOL, detectIndent, hasFinalEOL } from '@zokugun/text-line-utils';
 import { type AsyncDResult, err, ok, parseJSON, stringifyError } from '@zokugun/xtry';
-import { type Package } from '../types.js';
 
 export async function loadPackage(root: string): AsyncDResult<Package> {
 	const file = path.join(root, 'package.json');
@@ -18,7 +19,7 @@ export async function loadPackage(root: string): AsyncDResult<Package> {
 
 	if(data.fails) {
 		const { error } = data;
-		error.message = `${String(file)}: ${error.message}`;
+		error.message = `${file}: ${error.message}`;
 
 		return err(`Failed to read package.json: ${stringifyError(error)}`);
 	}

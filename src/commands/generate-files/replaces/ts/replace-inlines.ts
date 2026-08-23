@@ -1,13 +1,13 @@
 import { isEmptyRecord } from '@zokugun/is-it-type';
 
-type InlineImportMatches = Record<string, InlineImportMatch>;
 type InlineImportMatch = {
-	variable: string;
-	expression: string;
 	count: number;
+	expression: string;
 	replace: boolean;
 	type: boolean;
+	variable: string;
 };
+type InlineImportMatches = Record<string, InlineImportMatch>;
 
 const INLINE_REGEX = /(?:(:|=>)\s+)?\b(import\(("[^"]*"|'[^']*')\)\.(\w+))/g;
 const STATEMENT_REGEX = /import (?:type )?{ ([^}]*) } from/g;
@@ -16,7 +16,7 @@ export function replaceInlines(content: string): string {
 	const perVariables: Record<string, InlineImportMatches> = {};
 	const perFiles: Record<string, InlineImportMatches> = {};
 
-	let match: RegExpExecArray | null = null;
+	let match: RegExpExecArray | null;
 
 	while((match = INLINE_REGEX.exec(content))) {
 		const [, type, expression, file, variable] = match;
@@ -129,7 +129,7 @@ export function replaceInlines(content: string): string {
 		}
 
 		if(variables.length > 0) {
-			newImports.push(`import { ${variables.join(', ')} } from ${file.endsWith('/."') ? file.slice(0, -3) + '"' : file};`);
+			newImports.push(`import { ${variables.join(', ')} } from ${file.endsWith('/."') ? `${file.slice(0, -3)}"` : file};`);
 
 			for(const { expression, variable } of replacements) {
 				content = content.replaceAll(expression, variable);
@@ -148,7 +148,7 @@ export function replaceInlines(content: string): string {
 			}
 		}
 
-		content = content.slice(0, Math.max(0, typeIndex)) + newImports.join('\n') + '\n' + content.slice(Math.max(0, typeIndex));
+		content = `${content.slice(0, Math.max(0, typeIndex)) + newImports.join('\n')}\n${content.slice(Math.max(0, typeIndex))}`;
 	}
 
 	return content;
