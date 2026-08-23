@@ -1,3 +1,4 @@
+import type ts from 'typescript';
 import type { Config } from '../../../types.js';
 
 import fse from '@zokugun/fs-extra-plus/async';
@@ -5,6 +6,7 @@ import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
 
 import { copySoloDTS } from './copy-solo-dts.js';
 import { exec } from '../../../utils/exec.js';
+import { MODULE_2_RESOLUTION } from '../../../utils/module.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
 import { replaceCJS } from '../replaces/js/replace-cjs.js';
@@ -15,10 +17,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 `;
 const TYPE_REGEX = /"type":\s*"module"/;
 
-export async function generateCjsFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[]): AsyncDResult {
+export async function generateCjsFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], _tsConfig: ts.ParsedCommandLine): AsyncDResult {
 	const outDir = fse.join(config.outDir, 'cjs');
 	const updatePackage = config.tsModule.cjs !== 'commonjs';
-	const moduleResolution = config.tsModule.cjs === 'commonjs' ? 'node10' : (config.tsModule.cjs === 'nodenext' ? 'nodenext' : 'node16');
+	const moduleResolution = MODULE_2_RESOLUTION[config.tsModule.cjs];
 
 	let originalPackage: string | undefined;
 	let restorePackage = false;

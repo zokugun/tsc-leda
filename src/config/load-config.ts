@@ -1,10 +1,13 @@
 import type { Config } from '../types.js';
+import type { ModuleType } from '../utils/module.js';
 
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
 import { isArray, isNonBlankString, isRecord } from '@zokugun/is-it-type';
 import { err, ok, type Result, stringifyError, xtrySync, yerr, yresSync, type YResult } from '@zokugun/xtry';
 import YAML from 'yaml';
+
+import { MODULES } from '../utils/module.js';
 
 const CONFIG_FILES: Array<{ name: string; type?: 'json' | 'yaml' }> = [
 	{
@@ -78,24 +81,24 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 		}
 	}
 
-	const tsModule = { cjs: 'commonjs', esm: 'es2022' };
+	const tsModule: Config['tsModule'] = { cjs: 'commonjs' };
 
 	if(isRecord(data.tsModule)) {
-		let { cjs, esm } = data.tsModule;
+		const { cjs, esm } = data.tsModule;
 
 		if(isNonBlankString<string>(cjs)) {
-			cjs = cjs.trim().toLowerCase();
+			const value = cjs.trim().toLowerCase();
 
-			if(cjs === 'commonjs' || cjs === 'node16' || cjs === 'node18' || cjs === 'node20' || cjs === 'nodenext') {
-				tsModule.cjs = cjs;
+			if(MODULES.includes(value as ModuleType)) {
+				tsModule.cjs = cjs as ModuleType;
 			}
 		}
 
 		if(isNonBlankString<string>(esm)) {
-			esm = esm.trim().toLowerCase();
+			const value = esm.trim().toLowerCase();
 
-			if(esm === 'es2015' || esm === 'es2020' || esm === 'es2022' || esm === 'esnext') {
-				tsModule.esm = esm;
+			if(esm !== 'commonjs' && MODULES.includes(value as ModuleType)) {
+				tsModule.esm = esm as ModuleType;
 			}
 		}
 	}

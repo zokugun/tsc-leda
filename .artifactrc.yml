@@ -5,7 +5,7 @@ artifacts:
     requires:
       - "20"
   "@daiyam/artifact-lang-ts":
-    version: 0.11.7
+    version: 0.11.8
   "@daiyam/artifact-npm":
     version: 0.8.18
   "@daiyam/artifact-npm-ts":

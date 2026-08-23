@@ -1,6 +1,8 @@
 import process from 'node:process';
 import logger from '@zokugun/cli-utils/logger';
+import fse from '@zokugun/fs-extra-plus/path';
 import { stringifyError } from '@zokugun/xtry';
+import ts from 'typescript';
 
 import { findDtsFiles } from './utils/find-dts-files.js';
 import { findTsConfigFile } from './utils/find-ts-config-file.js';
@@ -34,6 +36,14 @@ export async function generateFiles(): Promise<void> {
 		logger.fatal(tsConfigFile.error);
 	}
 
+	// eslint-disable-next-line ts/unbound-method
+	const rawTsConfig = ts.readConfigFile(tsConfigFile.value, ts.sys.readFile);
+	if(rawTsConfig.error) {
+		logger.fatal(stringifyError(rawTsConfig.error.messageText));
+	}
+
+	const parsedTsConfig = ts.parseJsonConfigFileContent(rawTsConfig.config, ts.sys, fse.parentPath(tsConfigFile.value));
+
 	const dtsFilesResult = await findDtsFiles(root, tsConfigFile.value);
 	if(dtsFilesResult.fails) {
 		logger.fatal(dtsFilesResult.error);
@@ -42,7 +52,7 @@ export async function generateFiles(): Promise<void> {
 	if(config.formats.cjs) {
 		const done = logger.createStep('Generating CommonJS');
 
-		const result = await generateCjsFiles(root, config, tsConfigFile.value, dtsFilesResult.value);
+		const result = await generateCjsFiles(root, config, tsConfigFile.value, dtsFilesResult.value, parsedTsConfig);
 		if(result.fails) {
 			logger.fatal(result.error);
 		}
@@ -53,7 +63,7 @@ export async function generateFiles(): Promise<void> {
 	if(config.formats.esm) {
 		const done = logger.createStep('Generating ESM');
 
-		const result = await generateEsmFiles(root, config, tsConfigFile.value, dtsFilesResult.value);
+		const result = await generateEsmFiles(root, config, tsConfigFile.value, dtsFilesResult.value, parsedTsConfig);
 		if(result.fails) {
 			logger.fatal(result.error);
 		}
