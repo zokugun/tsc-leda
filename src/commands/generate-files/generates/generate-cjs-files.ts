@@ -1,23 +1,25 @@
 import type ts from 'typescript';
 import type { Config } from '../../../types.js';
+import type { Alias } from '../types.js';
 
 import fse from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
 
-import { copySoloDTS } from './copy-solo-dts.js';
 import { exec } from '../../../utils/exec.js';
 import { MODULE_2_RESOLUTION } from '../../../utils/module.js';
+import { copySoloDTS } from '../dts/copy-solo-dts.js';
+import { replaceCTS } from '../dts/replace-cts.js';
+import { replacePaths } from '../paths/replace-paths.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
-import { replaceCJS } from '../replaces/js/replace-cjs.js';
-import { replaceCTS } from '../replaces/ts/replace-cts.js';
+import { compose } from '../utils/compose.js';
 
 const EMPTY_MODULE = `"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 `;
 const TYPE_REGEX = /"type":\s*"module"/;
 
-export async function generateCjsFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], _tsConfig: ts.ParsedCommandLine): AsyncDResult {
+export async function generateCJSFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], aliases: Alias[], _tsConfig: ts.ParsedCommandLine): AsyncDResult {
 	const outDir = fse.join(config.outDir, 'cjs');
 	const updatePackage = config.tsModule.cjs !== 'commonjs';
 	const moduleResolution = MODULE_2_RESOLUTION[config.tsModule.cjs];
@@ -64,12 +66,12 @@ export async function generateCjsFiles(root: string, config: Config, tsConfigFil
 		return err(stringifyError(execResult.error));
 	}
 
-	const jsResult = await renameJS(outDir, '.cjs', replaceCJS);
+	const jsResult = await renameJS(outDir, '.cjs', replacePaths(outDir, tsConfigFile, aliases, '.cjs'));
 	if(jsResult.fails) {
 		return jsResult;
 	}
 
-	const dtsResult = await renameDTS(outDir, '.d.cts', replaceCTS);
+	const dtsResult = await renameDTS(outDir, '.d.cts', compose(replacePaths(outDir, tsConfigFile, aliases), replaceCTS));
 	if(dtsResult.fails) {
 		return dtsResult;
 	}

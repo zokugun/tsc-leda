@@ -3,7 +3,7 @@ import type { Config } from '../../../types.js';
 import fse from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, ok } from '@zokugun/xtry';
 
-export async function findTsConfigFile(root: string, config: Config): AsyncDResult<string> {
+export async function findTSConfigFile(root: string, config: Config): AsyncDResult<string> {
 	let sourceDir = fse.join(root, config.srcDir);
 
 	do {

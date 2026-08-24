@@ -4,10 +4,11 @@ import fse from '@zokugun/fs-extra-plus/path';
 import { stringifyError } from '@zokugun/xtry';
 import ts from 'typescript';
 
-import { findDtsFiles } from './utils/find-dts-files.js';
-import { findTsConfigFile } from './utils/find-ts-config-file.js';
-import { generateCjsFiles } from './utils/generate-cjs-files.js';
-import { generateEsmFiles } from './utils/generate-esm-files.js';
+import { findDTSFiles } from './dts/find-dts-files.js';
+import { generateCJSFiles } from './generates/generate-cjs-files.js';
+import { generateESMFiles } from './generates/generate-esm-files.js';
+import { buildAliases } from './paths/build-aliases.js';
+import { findTSConfigFile } from './utils/find-ts-config-file.js';
 import { prepareOutput } from './utils/prepare-output.js';
 import { loadConfig } from '../../config/load-config.js';
 
@@ -31,20 +32,25 @@ export async function generateFiles(): Promise<void> {
 		logger.fatal(stringifyError(result.error));
 	}
 
-	const tsConfigFile = await findTsConfigFile(root, config);
+	const tsConfigFile = await findTSConfigFile(root, config);
 	if(tsConfigFile.fails) {
 		logger.fatal(tsConfigFile.error);
 	}
 
 	// eslint-disable-next-line ts/unbound-method
-	const rawTsConfig = ts.readConfigFile(tsConfigFile.value, ts.sys.readFile);
-	if(rawTsConfig.error) {
-		logger.fatal(stringifyError(rawTsConfig.error.messageText));
+	const rawTSConfig = ts.readConfigFile(tsConfigFile.value, ts.sys.readFile);
+	if(rawTSConfig.error) {
+		logger.fatal(stringifyError(rawTSConfig.error.messageText));
 	}
 
-	const parsedTsConfig = ts.parseJsonConfigFileContent(rawTsConfig.config, ts.sys, fse.parentPath(tsConfigFile.value));
+	const parsedTSConfig = ts.parseJsonConfigFileContent(rawTSConfig.config, ts.sys, fse.parentPath(tsConfigFile.value));
 
-	const dtsFilesResult = await findDtsFiles(root, tsConfigFile.value);
+	const aliases = buildAliases(tsConfigFile.value, parsedTSConfig);
+	if(aliases.fails) {
+		logger.fatal(aliases.error);
+	}
+
+	const dtsFilesResult = await findDTSFiles(root, tsConfigFile.value);
 	if(dtsFilesResult.fails) {
 		logger.fatal(dtsFilesResult.error);
 	}
@@ -52,7 +58,7 @@ export async function generateFiles(): Promise<void> {
 	if(config.formats.cjs) {
 		const done = logger.createStep('Generating CommonJS');
 
-		const result = await generateCjsFiles(root, config, tsConfigFile.value, dtsFilesResult.value, parsedTsConfig);
+		const result = await generateCJSFiles(root, config, tsConfigFile.value, dtsFilesResult.value, aliases.value, parsedTSConfig);
 		if(result.fails) {
 			logger.fatal(result.error);
 		}
@@ -63,7 +69,7 @@ export async function generateFiles(): Promise<void> {
 	if(config.formats.esm) {
 		const done = logger.createStep('Generating ESM');
 
-		const result = await generateEsmFiles(root, config, tsConfigFile.value, dtsFilesResult.value, parsedTsConfig);
+		const result = await generateESMFiles(root, config, tsConfigFile.value, dtsFilesResult.value, aliases.value, parsedTSConfig);
 		if(result.fails) {
 			logger.fatal(result.error);
 		}

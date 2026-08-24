@@ -1,19 +1,21 @@
 import type ts from 'typescript';
 import type { Config } from '../../../types.js';
+import type { Alias } from '../types.js';
 
 import fse from '@zokugun/fs-extra-plus/path';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
 
-import { copySoloDTS } from './copy-solo-dts.js';
-import { resolveModule } from './resolve-module.js';
 import { exec } from '../../../utils/exec.js';
 import { MODULE_2_RESOLUTION } from '../../../utils/module.js';
+import { copySoloDTS } from '../dts/copy-solo-dts.js';
+import { replaceMTS } from '../dts/replace-mts.js';
+import { replacePaths } from '../paths/replace-paths.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
-import { replaceMJS } from '../replaces/js/replace-mjs.js';
-import { replaceMTS } from '../replaces/ts/replace-mts.js';
+import { compose } from '../utils/compose.js';
+import { resolveModule } from '../utils/resolve-module.js';
 
-export async function generateEsmFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], tsConfig: ts.ParsedCommandLine): AsyncDResult {
+export async function generateESMFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], aliases: Alias[], tsConfig: ts.ParsedCommandLine): AsyncDResult {
 	const outDir = fse.join(config.outDir, 'esm');
 	const module = config.tsModule.esm ?? resolveModule(tsConfig) ?? 'node16';
 	const moduleResolution = MODULE_2_RESOLUTION[module];
@@ -23,12 +25,12 @@ export async function generateEsmFiles(root: string, config: Config, tsConfigFil
 		return err(stringifyError(execResult.error));
 	}
 
-	const jsResult = await renameJS(outDir, '.mjs', replaceMJS);
+	const jsResult = await renameJS(outDir, '.mjs', replacePaths(outDir, tsConfigFile, aliases, '.mjs'));
 	if(jsResult.fails) {
 		return jsResult;
 	}
 
-	const dtsResult = await renameDTS(outDir, '.d.mts', replaceMTS);
+	const dtsResult = await renameDTS(outDir, '.d.mts', compose(replacePaths(outDir, tsConfigFile, aliases), replaceMTS));
 	if(dtsResult.fails) {
 		return dtsResult;
 	}

@@ -3,7 +3,7 @@ import { type AsyncDResult, err, ok, stringifyError } from '@zokugun/xtry';
 
 import { exec } from '../../../utils/exec.js';
 
-export async function findDtsFiles(root: string, tsConfigFile: string): AsyncDResult<string[]> {
+export async function findDTSFiles(root: string, tsConfigFile: string): AsyncDResult<string[]> {
 	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--listFilesOnly'], { cwd: root, lines: true });
 	if(execResult.fails) {
 		return err(stringifyError(execResult.error));
