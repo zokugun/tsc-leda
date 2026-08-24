@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0 | 2026-08-24
+- use `module` from `tsconfig`
+- support `tsconfig`'s `paths` aliases
+
 ## v0.6.0 | 2026-08-12
 - add `tsModule` option
 
