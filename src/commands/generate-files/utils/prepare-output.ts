@@ -1,4 +1,4 @@
-import type { Config } from '../../../types.js';
+import type { Config } from '#/types.js';
 
 import fse, { type FsResult } from '@zokugun/fs-extra-plus/async';
 import { OK } from '@zokugun/xtry';

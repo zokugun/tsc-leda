@@ -1,4 +1,4 @@
-import type { Package } from '../types.js';
+import type { Package } from '#/types.js';
 
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';

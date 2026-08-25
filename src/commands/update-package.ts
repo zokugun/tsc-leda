@@ -1,11 +1,11 @@
-import type { Config } from '../types.js';
+import type { Config } from '#/types.js';
 
 import process from 'node:process';
 import logger from '@zokugun/cli-utils/logger';
 import { isString } from '@zokugun/is-it-type';
 import { stringifyError, xtryAsync } from '@zokugun/xtry';
 
-import { loadConfig } from '../config/load-config.js';
+import { loadConfig } from '#/config/load-config.js';
 import { loadPackage } from '../package/load-package.js';
 import { writePackage } from '../package/write-package.js';
 

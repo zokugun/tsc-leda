@@ -1,7 +1,7 @@
 import fse from '@zokugun/fs-extra-plus/path';
 import { type AsyncDResult, err, ok, stringifyError } from '@zokugun/xtry';
 
-import { exec } from '../../../utils/exec.js';
+import { exec } from '#utils/exec.js';
 
 export async function findDTSFiles(root: string, tsConfigFile: string): AsyncDResult<string[]> {
 	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--listFilesOnly'], { cwd: root, lines: true });

@@ -4,13 +4,13 @@ import fse from '@zokugun/fs-extra-plus/path';
 import { stringifyError } from '@zokugun/xtry';
 import ts from 'typescript';
 
+import { loadConfig } from '#/config/load-config.js';
 import { findDTSFiles } from './dts/find-dts-files.js';
 import { generateCJSFiles } from './generates/generate-cjs-files.js';
 import { generateESMFiles } from './generates/generate-esm-files.js';
 import { buildAliases } from './paths/build-aliases.js';
 import { findTSConfigFile } from './utils/find-ts-config-file.js';
 import { prepareOutput } from './utils/prepare-output.js';
-import { loadConfig } from '../../config/load-config.js';
 
 export async function generateFiles(): Promise<void> {
 	const root = process.cwd();

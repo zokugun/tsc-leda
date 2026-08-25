@@ -4,6 +4,5 @@
 !package.json
 !LICENSE
 !README.md
-!lib/**/*.js
-!lib/**/*.d.ts
 !bin
+!dist/**/*.mjs

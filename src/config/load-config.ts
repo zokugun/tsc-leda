@@ -1,6 +1,6 @@
 import type { AsyncDResult, DResult, YResult } from '@zokugun/xtry';
-import type { Config } from '../types.js';
-import type { ModuleType } from '../utils/module.js';
+import type { Config } from '#/types.js';
+import type { ModuleType } from '#utils/module.js';
 
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
@@ -8,7 +8,7 @@ import { isArray, isBoolean, isNonBlankString, isRecord, isString } from '@zokug
 import { err, ok, stringifyError, xtrySync, yerr, yresAsync } from '@zokugun/xtry';
 import YAML from 'yaml';
 
-import { MODULES } from '../utils/module.js';
+import { MODULES } from '#utils/module.js';
 
 const CONFIG_FILES: Array<{ name: string; type?: 'json' | 'yaml' }> = [
 	{

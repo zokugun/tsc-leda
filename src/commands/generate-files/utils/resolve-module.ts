@@ -1,8 +1,8 @@
-import type { ModuleType } from '../../../utils/module.js';
+import type { ModuleType } from '#utils/module.js';
 
 import ts from 'typescript';
 
-import { MODULES } from '../../../utils/module.js';
+import { MODULES } from '#utils/module.js';
 
 export function resolveModule(tsConfig: ts.ParsedCommandLine): ModuleType | undefined {
 	if(!tsConfig.options.module) {
