@@ -65,8 +65,10 @@ export async function updatePackage(): Promise<void> {
 }
 
 async function configureCommonJs(config: Config, packageJson: Record<string, unknown>): Promise<void> {
+	const outDir = config.useFormatDir ? join(config.outDir, 'cjs') : config.outDir;
+
 	if(isString(config.entries['.'])) {
-		packageJson.main = join(config.outDir, 'cjs', config.entries['.'].replace(/\.ts$/, '.cjs'));
+		packageJson.main = join(outDir, config.entries['.'].replace(/\.ts$/, '.cjs'));
 	}
 
 	const exports = packageJson.exports as Record<string, { require?: string }>;
@@ -76,17 +78,19 @@ async function configureCommonJs(config: Config, packageJson: Record<string, unk
 		const entryName = key === '.' ? '.' : join('.', key);
 
 		exports[entryName] ??= {};
-		exports[entryName].require = join('.', config.outDir, 'cjs', file.replace(/\.ts$/, '.cjs'));
+		exports[entryName].require = join('.', outDir, file.replace(/\.ts$/, '.cjs'));
 
-		typesVersions[key] = [join('.', config.outDir, 'cjs', file.replace(/\.ts$/, '.d.cts'))];
+		typesVersions[key] = [join('.', outDir, file.replace(/\.ts$/, '.d.cts'))];
 	}
 
 	packageJson.typesVersions = { '*': typesVersions };
 }
 
 async function configureEsm(config: Config, packageJson: Record<string, unknown>): Promise<void> {
+	const outDir = config.useFormatDir ? join(config.outDir, 'esm') : config.outDir;
+
 	if(isString(config.entries['.'])) {
-		packageJson.module = join(config.outDir, 'esm', config.entries['.'].replace(/\.ts$/, '.mjs'));
+		packageJson.module = join(outDir, config.entries['.'].replace(/\.ts$/, '.mjs'));
 	}
 
 	const exports = packageJson.exports as Record<string, { import?: string }>;
@@ -95,7 +99,7 @@ async function configureEsm(config: Config, packageJson: Record<string, unknown>
 		const entryName = key === '.' ? '.' : join('.', key);
 
 		exports[entryName] ??= {};
-		exports[entryName].import = join('.', config.outDir, 'esm', file.replace(/\.ts$/, '.mjs'));
+		exports[entryName].import = join('.', outDir, file.replace(/\.ts$/, '.mjs'));
 	}
 }
 
