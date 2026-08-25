@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.8.2 | 2026-08-25
+- allow no config file, detect and use default options
+
 ## v0.8.1 | 2026-08-25
 - resolve default format from `package.json`
 - use `formatDir` when only needed or required
