@@ -3,7 +3,7 @@ import type { ModuleType } from '../utils/module.js';
 
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
-import { isArray, isNonBlankString, isRecord } from '@zokugun/is-it-type';
+import { isArray, isBoolean, isNonBlankString, isRecord } from '@zokugun/is-it-type';
 import { err, ok, type Result, stringifyError, xtrySync, yerr, yresSync, type YResult } from '@zokugun/xtry';
 import YAML from 'yaml';
 
@@ -103,12 +103,19 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 		}
 	}
 
+	let useFormatDir = true;
+
+	if((!formats.cjs || !formats.esm) && isBoolean(data.useFormatDir)) {
+		({ useFormatDir } = data);
+	}
+
 	return ok({
 		entries,
 		formats,
 		outDir,
 		srcDir: sourceDir,
 		tsModule,
+		useFormatDir,
 	});
 } // }}}
 

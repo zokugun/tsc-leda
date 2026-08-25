@@ -16,11 +16,12 @@ import { compose } from '../utils/compose.js';
 import { resolveModule } from '../utils/resolve-module.js';
 
 export async function generateESMFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], aliases: Alias[], tsConfig: ts.ParsedCommandLine): AsyncDResult {
-	const outDir = fse.join(config.outDir, 'esm');
+	const { declaration = false } = tsConfig.options;
+	const outDir = config.useFormatDir ? fse.join(config.outDir, 'esm') : config.outDir;
 	const module = config.tsModule.esm ?? resolveModule(tsConfig) ?? 'node16';
 	const moduleResolution = MODULE_2_RESOLUTION[module];
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', 'true', '--outDir', outDir, '--module', module, '--moduleResolution', moduleResolution], { cwd: root, stdio: 'inherit' });
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', module, '--moduleResolution', moduleResolution], { cwd: root, stdio: 'inherit' });
 	if(execResult.fails) {
 		return err(stringifyError(execResult.error));
 	}
@@ -30,14 +31,16 @@ export async function generateESMFiles(root: string, config: Config, tsConfigFil
 		return jsResult;
 	}
 
-	const dtsResult = await renameDTS(outDir, '.d.mts', compose(replacePaths(outDir, tsConfigFile, aliases), replaceMTS));
-	if(dtsResult.fails) {
-		return dtsResult;
-	}
+	if(declaration) {
+		const dtsResult = await renameDTS(outDir, '.d.mts', compose(replacePaths(outDir, tsConfigFile, aliases), replaceMTS));
+		if(dtsResult.fails) {
+			return dtsResult;
+		}
 
-	const copyResult = await copySoloDTS(dtsFiles, '.d.mts', '.mjs', 'export {};\n', root, outDir, config);
-	if(copyResult.fails) {
-		return copyResult;
+		const copyResult = await copySoloDTS(dtsFiles, '.d.mts', '.mjs', 'export {};\n', root, outDir, config);
+		if(copyResult.fails) {
+			return copyResult;
+		}
 	}
 
 	return OK;

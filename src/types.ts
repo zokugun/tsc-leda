@@ -13,6 +13,7 @@ export type Config = {
 		cjs: ModuleType;
 		esm?: ModuleType;
 	};
+	useFormatDir: boolean;
 };
 
 export type Package = {

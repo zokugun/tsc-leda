@@ -19,8 +19,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 `;
 const TYPE_REGEX = /"type":\s*"module"/;
 
-export async function generateCJSFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], aliases: Alias[], _tsConfig: ts.ParsedCommandLine): AsyncDResult {
-	const outDir = fse.join(config.outDir, 'cjs');
+export async function generateCJSFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], aliases: Alias[], tsConfig: ts.ParsedCommandLine): AsyncDResult {
+	const { declaration = false } = tsConfig.options;
+	const outDir = config.useFormatDir ? fse.join(config.outDir, 'cjs') : config.outDir;
 	const updatePackage = config.tsModule.cjs !== 'commonjs';
 	const moduleResolution = MODULE_2_RESOLUTION[config.tsModule.cjs];
 
@@ -51,7 +52,7 @@ export async function generateCJSFiles(root: string, config: Config, tsConfigFil
 		}
 	}
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', 'true', '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true'], { cwd: root, stdio: 'inherit' });
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true'], { cwd: root, stdio: 'inherit' });
 
 	if(restorePackage) {
 		const file = fse.join(root, 'package.json');
@@ -71,14 +72,16 @@ export async function generateCJSFiles(root: string, config: Config, tsConfigFil
 		return jsResult;
 	}
 
-	const dtsResult = await renameDTS(outDir, '.d.cts', compose(replacePaths(outDir, tsConfigFile, aliases), replaceCTS));
-	if(dtsResult.fails) {
-		return dtsResult;
-	}
+	if(declaration) {
+		const dtsResult = await renameDTS(outDir, '.d.cts', compose(replacePaths(outDir, tsConfigFile, aliases), replaceCTS));
+		if(dtsResult.fails) {
+			return dtsResult;
+		}
 
-	const copyResult = await copySoloDTS(dtsFiles, '.d.cts', '.cjs', EMPTY_MODULE, root, outDir, config);
-	if(copyResult.fails) {
-		return copyResult;
+		const copyResult = await copySoloDTS(dtsFiles, '.d.cts', '.cjs', EMPTY_MODULE, root, outDir, config);
+		if(copyResult.fails) {
+			return copyResult;
+		}
 	}
 
 	return OK;
