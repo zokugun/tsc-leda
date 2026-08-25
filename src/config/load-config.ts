@@ -38,7 +38,7 @@ export async function loadConfig(fileRoot: string): AsyncDResult<Config> { // {{
 		}
 	}
 
-	return err(`Directory ${fileRoot} must include one of ${CONFIG_FILES.map(({ name }) => name).join(', ')} at its root.`);
+	return normalizeConfig({}, fileRoot, '');
 } // }}}
 
 async function normalizeConfig(data: unknown, root: string, source: string): AsyncDResult<Config> { // {{{
