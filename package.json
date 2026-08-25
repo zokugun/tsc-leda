@@ -65,7 +65,7 @@
 		"@zokugun/eslint-config-nodejs": "0.2.0",
 		"@zokugun/eslint-config-style": "0.3.1",
 		"@zokugun/eslint-config-ts": "0.3.2",
-		"@zokugun/tsc-leda": "0.8.2",
+		"@zokugun/tsc-leda": "0.8.3",
 		"eslint": "10.8.1",
 		"fixpack": "4.0.0",
 		"husky": "9.1.7",
