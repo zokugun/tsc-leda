@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.8.1 | 2026-08-25
+- resolve default format from `package.json`
+- use `formatDir` when only needed or required
+- update `package.json` with correct `formatDir`
+
 ## v0.8.0 | 2026-08-25
 - add `useFormatDir` option
 - use `declaration` from `tsconfig`
