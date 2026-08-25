@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.8.0 | 2026-08-25
+- add `useFormatDir` option
+- use `declaration` from `tsconfig`
+
 ## v0.7.0 | 2026-08-24
 - use `module` from `tsconfig`
 - support `tsconfig`'s `paths` aliases
