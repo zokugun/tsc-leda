@@ -119,9 +119,12 @@ async function normalizeConfig(data: unknown, root: string, source: string): Asy
 		}
 	}
 
-	let useFormatDir = true;
+	let useFormatDir = false;
 
-	if((!formats.cjs || !formats.esm) && isBoolean(data.useFormatDir)) {
+	if(formats.cjs && formats.esm) {
+		useFormatDir = true;
+	}
+	else if(isBoolean(data.useFormatDir)) {
 		({ useFormatDir } = data);
 	}
 
