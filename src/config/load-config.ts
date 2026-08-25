@@ -1,10 +1,11 @@
+import type { AsyncDResult, DResult, YResult } from '@zokugun/xtry';
 import type { Config } from '../types.js';
 import type { ModuleType } from '../utils/module.js';
 
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
-import { isArray, isBoolean, isNonBlankString, isRecord } from '@zokugun/is-it-type';
-import { err, ok, type Result, stringifyError, xtrySync, yerr, yresSync, type YResult } from '@zokugun/xtry';
+import { isArray, isBoolean, isNonBlankString, isRecord, isString } from '@zokugun/is-it-type';
+import { err, ok, stringifyError, xtrySync, yerr, yresAsync } from '@zokugun/xtry';
 import YAML from 'yaml';
 
 import { MODULES } from '../utils/module.js';
@@ -27,7 +28,7 @@ const CONFIG_FILES: Array<{ name: string; type?: 'json' | 'yaml' }> = [
 	},
 ];
 
-export async function loadConfig(fileRoot: string): Promise<Result<Config, string>> { // {{{
+export async function loadConfig(fileRoot: string): AsyncDResult<Config> { // {{{
 	for(const { name, type } of CONFIG_FILES) {
 		const filename = path.join(fileRoot, name);
 		const result = await tryReadConfigFile(filename, fileRoot, name, type);
@@ -40,7 +41,7 @@ export async function loadConfig(fileRoot: string): Promise<Result<Config, strin
 	return err(`Directory ${fileRoot} must include one of ${CONFIG_FILES.map(({ name }) => name).join(', ')} at its root.`);
 } // }}}
 
-function normalizeConfig(data: unknown, root: string, source: string): Result<Config, string> { // {{{
+async function normalizeConfig(data: unknown, root: string, source: string): AsyncDResult<Config> { // {{{
 	if(!isRecord(data)) {
 		return err(`Config file ${source} must export an object.`);
 	}
@@ -72,12 +73,27 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 			}
 		}
 	}
-	else {
+	else if(isString(data.format)) {
 		if(data.format === 'cjs') {
 			formats.cjs = true;
 		}
 		else if(data.format === 'esm') {
 			formats.esm = true;
+		}
+	}
+	else {
+		const file = path.join(root, 'package.json');
+
+		const result = await fse.readJSON(file);
+		if(result.fails) {
+			return err(`Failed to read package.json: ${stringifyError(result.error)}`);
+		}
+
+		if(isRecord(result.value) && result.value.type === 'module') {
+			formats.esm = true;
+		}
+		else {
+			formats.cjs = true;
 		}
 	}
 
@@ -119,7 +135,7 @@ function normalizeConfig(data: unknown, root: string, source: string): Result<Co
 	});
 } // }}}
 
-function parseConfigContent(content: string, type?: 'json' | 'yaml'): Result<unknown, string> { // {{{
+function parseConfigContent(content: string, type?: 'json' | 'yaml'): DResult<unknown> { // {{{
 	if(type === 'json') {
 		return xtrySync(() => JSON.parse(content) as unknown, stringifyError);
 	}
@@ -154,5 +170,5 @@ async function tryReadConfigFile(filename: string, root: string, name: string, t
 		return err(`Failed to parse ${name} from package: ${parsed.error}`);
 	}
 
-	return yresSync(normalizeConfig(parsed.value, root, name));
+	return yresAsync(normalizeConfig(parsed.value, root, name));
 } // }}}
