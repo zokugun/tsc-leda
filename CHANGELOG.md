@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.8.3 | 2026-08-25
+- use path aliases
+- use self to build package
+
 ## v0.8.2 | 2026-08-25
 - allow no config file, detect and use default options
 
