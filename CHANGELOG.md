@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.8.4 | 2026-08-28
+- fix requirements in README.md
+- use self to package for distribution
+
 ## v0.8.3 | 2026-08-25
 - use path aliases
 - use self to build package
