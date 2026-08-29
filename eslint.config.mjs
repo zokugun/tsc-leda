@@ -8,18 +8,33 @@ import { importX, perfectionist, stylistic } from '@zokugun/eslint-config-style'
 import { typescript } from '@zokugun/eslint-config-ts';
 
 export default configure([
+	// configdotts/Ignore rules
 	ignores(),
 	gitignore(),
+
+	// configdotts/Documentation rules
 	glossary(),
 	markdown(),
+
+	// configdotts/Runtime rules
 	nodejs(),
+
+	// configdotts/Language rules
 	javascript(),
-	regexp(),
 	typescript(),
+
+	// configdotts/Language-feature rules
+	regexp(),
+
+	// configdotts/Testing rules
+
+	// configdotts/Sorting and stylistic rules
 	importX(),
 	perfectionist(),
 	stylistic(),
+
+	// configdotts/Data-format rules
 	json(),
 	jsonc(),
-	yaml(),
+	yaml()
 ]);
