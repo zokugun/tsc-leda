@@ -87,6 +87,30 @@ Commands
 
 Run command help via `npx tsc-leda --help`.
 
+Directive Comments
+------------------
+
+Use directive comments to change selected source lines when generating the CommonJS output.
+
+- `// tsc-leda-comment-next-line-if-commonjs`
+- `// tsc-leda-comment-next-2-lines-if-commonjs`
+- `// tsc-leda-uncomment-next-line-if-commonjs`
+- `// tsc-leda-uncomment-next-5-lines-if-commonjs`
+- `// tsc-leda-toggle-next-line-if-commonjs`
+- `// tsc-leda-toggle-next-3-lines-if-commonjs`
+
+The numbered forms apply to the specified number of following lines.
+
+A toggle directive uncomment the first block and comments the following block of the same size, which is useful for choosing between CommonJS and ESM alternatives:
+
+```typescript
+// tsc-leda-toggle-next-line-if-commonjs
+// const MODULE_DIRECTORY = `${__dirname}/`;
+const MODULE_DIRECTORY = `${dirname(fileURLToPath(import.meta.url))}/`;
+```
+
+The CommonJS output contains the `__dirname` version, while the ESM output contains the `import.meta` version.
+
 Contributions
 -------------
 

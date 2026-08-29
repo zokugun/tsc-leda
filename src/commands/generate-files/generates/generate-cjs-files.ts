@@ -13,6 +13,8 @@ import { replacePaths } from '../paths/replace-paths.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
 import { compose } from '../utils/compose.js';
+import { replaceDirectives } from '../utils/replace-directives.js';
+import { restoreModifiedFiles } from '../utils/restore-modified-files.js';
 
 const EMPTY_MODULE = `"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -25,42 +27,50 @@ export async function generateCJSFiles(root: string, config: Config, tsConfigFil
 	const updatePackage = config.tsModule.cjs !== 'commonjs';
 	const moduleResolution = MODULE_2_RESOLUTION[config.tsModule.cjs];
 
-	let originalPackage: string | undefined;
-	let restorePackage = false;
+	const directivesResult = await replaceDirectives(tsConfig.fileNames, root);
+	if(directivesResult.fails) {
+		return directivesResult;
+	}
+
+	const modifiedFiles = directivesResult.value;
 
 	if(updatePackage) {
 		const file = fse.join(root, 'package.json');
 
 		const result = await fse.readFile(file, 'utf8');
+
 		if(result.fails) {
 			return err(`Failed to read package.json: ${stringifyError(result.error)}`);
 		}
 
-		originalPackage = result.value;
-
-		const match = TYPE_REGEX.exec(originalPackage);
+		const match = TYPE_REGEX.exec(result.value);
 
 		if(match) {
-			restorePackage = true;
+			const newPackage = `${result.value.slice(0, match.index)}"type": "commonjs"${result.value.slice(match.index + match.at(0)!.length)}`;
 
-			const newPackage = `${originalPackage.slice(0, match.index)}"type": "commonjs"${originalPackage.slice(match.index + match.at(0)!.length)}`;
+			const writeResult = await fse.writeFile(file, newPackage, 'utf8');
 
-			const result = await fse.writeFile(file, newPackage, 'utf8');
-			if(result.fails) {
-				return err(`Failed to write package.json: ${stringifyError(result.error)}`);
+			if(writeResult.fails) {
+				const restore = await restoreModifiedFiles(modifiedFiles, root);
+				if(restore.fails) {
+					return restore;
+				}
+
+				return err(`Failed to write package.json: ${stringifyError(writeResult.error)}`);
 			}
+
+			modifiedFiles.push({
+				content: result.value,
+				path: file,
+			});
 		}
 	}
 
 	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true'], { cwd: root, stdio: 'inherit' });
 
-	if(restorePackage) {
-		const file = fse.join(root, 'package.json');
-		const result = await fse.writeFile(file, originalPackage!, 'utf8');
-
-		if(result.fails) {
-			return err(`Failed to write package.json: ${stringifyError(result.error)}`);
-		}
+	const restore = await restoreModifiedFiles(modifiedFiles, root);
+	if(restore.fails) {
+		return restore;
 	}
 
 	if(execResult.fails) {
