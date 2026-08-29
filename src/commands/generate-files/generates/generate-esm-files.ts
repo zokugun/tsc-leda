@@ -21,7 +21,7 @@ export async function generateESMFiles(root: string, config: Config, tsConfigFil
 	const module = config.tsModule.esm ?? resolveModule(tsConfig) ?? 'node16';
 	const moduleResolution = MODULE_2_RESOLUTION[module];
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', module, '--moduleResolution', moduleResolution], { cwd: root, stdio: 'inherit' });
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', module, '--moduleResolution', moduleResolution, '--removeComments'], { cwd: root, stdio: 'inherit' });
 	if(execResult.fails) {
 		return err(stringifyError(execResult.error));
 	}

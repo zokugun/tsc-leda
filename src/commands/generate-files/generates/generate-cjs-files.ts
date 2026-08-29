@@ -66,7 +66,7 @@ export async function generateCJSFiles(root: string, config: Config, tsConfigFil
 		}
 	}
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true'], { cwd: root, stdio: 'inherit' });
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true', '--removeComments'], { cwd: root, stdio: 'inherit' });
 
 	const restore = await restoreModifiedFiles(modifiedFiles, root);
 	if(restore.fails) {
