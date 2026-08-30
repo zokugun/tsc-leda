@@ -17,13 +17,13 @@ export function isMatchingFile(path: string): boolean {
 		return true;
 	}
 
-	const tsPath = path.replace(/(?<=\.[^/.]*)js$/, '');
+	const tsPath = path.replace(/(?<=\.[^./]{0,128})js$/, '');
 
 	if(fse.isFile(tsPath)) {
 		return true;
 	}
 
-	const pathWithoutExtension = path.replace(/\.[^/.]*(js|json)$/, '');
+	const pathWithoutExtension = path.replace(/\.[^./]{0,128}(?:js|json)$/, '');
 
 	for(const ext of FILE_EXTENSIONS) {
 		const path = `${pathWithoutExtension}${ext}`;

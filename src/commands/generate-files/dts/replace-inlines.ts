@@ -10,7 +10,7 @@ type InlineImportMatch = {
 type InlineImportMatches = Record<string, InlineImportMatch>;
 
 const INLINE_REGEX = /(?:(:|=>)\s+)?\b(import\(("[^"]*"|'[^']*')\)\.(\w+))/g;
-const STATEMENT_REGEX = /import (?:type )?{ ([^}]*) } from/g;
+const STATEMENT_REGEX = /import (?:type )?\{ ([^}]*) \} from/g;
 
 export function replaceInlines(content: string): string {
 	const perVariables: Record<string, InlineImportMatches> = {};

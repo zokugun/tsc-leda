@@ -36,5 +36,5 @@ export default configure([
 	// configdotts/Data-format rules
 	json(),
 	jsonc(),
-	yaml()
+	yaml(),
 ]);

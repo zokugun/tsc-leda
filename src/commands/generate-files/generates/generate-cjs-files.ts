@@ -1,6 +1,7 @@
 import type ts from 'typescript';
 import type { Config } from '#/types.js';
 import type { Alias } from '../types.js';
+import type { ModifiedFile } from '../utils/restore-modified-files.js';
 
 import fse from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
@@ -26,13 +27,12 @@ export async function generateCJSFiles(root: string, config: Config, tsConfigFil
 	const outDir = config.useFormatDir ? fse.join(config.outDir, 'cjs') : config.outDir;
 	const updatePackage = config.tsModule.cjs !== 'commonjs';
 	const moduleResolution = MODULE_2_RESOLUTION[config.tsModule.cjs];
+	const modifiedFiles: ModifiedFile[] = [];
 
-	const directivesResult = await replaceDirectives(tsConfig.fileNames, root);
-	if(directivesResult.fails) {
-		return directivesResult;
+	const replaceResult = await replaceDirectives(tsConfig.fileNames, 'CJS', modifiedFiles, root);
+	if(replaceResult.fails) {
+		return replaceResult;
 	}
-
-	const modifiedFiles = directivesResult.value;
 
 	if(updatePackage) {
 		const file = fse.join(root, 'package.json');
@@ -66,7 +66,7 @@ export async function generateCJSFiles(root: string, config: Config, tsConfigFil
 		}
 	}
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true', '--removeComments'], { cwd: root, stdio: 'inherit' });
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', config.tsModule.cjs, '--moduleResolution', moduleResolution, '--esModuleInterop', 'true'], { cwd: root, stdio: 'inherit' });
 
 	const restore = await restoreModifiedFiles(modifiedFiles, root);
 	if(restore.fails) {

@@ -9,14 +9,14 @@ const MATCHERS = [
 	/((?:require|require\.resolve|import)\(")([^"]+)("\))/g,
 	/((?:require|require\.resolve|import)\(')([^']+)('\))/g,
 	// import 'package'
-	/((?:import|export) ")([^"]+)(")/g,
-	/((?:import|export) ')([^']+)(')/g,
+	/((?:export|import) ")([^"]+)(")/g,
+	/((?:export|import) ')([^']+)(')/g,
 	// import {} from 'package', import * as name from 'package'
-	/((?:import|export) .+ from ")([^"]+)(")/g,
-	/((?:import|export) .+ from ')([^']+)(')/g,
+	/((?:export|import) .+ from ")([^"]+)(")/g,
+	/((?:export|import) .+ from ')([^']+)(')/g,
 	// multiline import/exports with {}
-	/((?:import|export) {\n[^}]+} from ")([^"]+)(")/g,
-	/((?:import|export) {\n[^}]+} from ')([^']+)(')/g,
+	/((?:export|import) \{\n[^}]+\} from ")([^"]+)(")/g,
+	/((?:export|import) \{\n[^}]+\} from ')([^']+)(')/g,
 ];
 
 export function replacePaths(outDir: string, tsConfigFile: string, aliases: Alias[], newExtname?: string): Compositor {

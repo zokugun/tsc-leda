@@ -1,6 +1,7 @@
 import type ts from 'typescript';
 import type { Config } from '#/types.js';
 import type { Alias } from '../types.js';
+import type { ModifiedFile } from '../utils/restore-modified-files.js';
 
 import fse from '@zokugun/fs-extra-plus/path';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
@@ -13,15 +14,29 @@ import { replacePaths } from '../paths/replace-paths.js';
 import { renameDTS } from '../renames/rename-dts.js';
 import { renameJS } from '../renames/rename-js.js';
 import { compose } from '../utils/compose.js';
+import { replaceDirectives } from '../utils/replace-directives.js';
 import { resolveModule } from '../utils/resolve-module.js';
+import { restoreModifiedFiles } from '../utils/restore-modified-files.js';
 
 export async function generateESMFiles(root: string, config: Config, tsConfigFile: string, dtsFiles: string[], aliases: Alias[], tsConfig: ts.ParsedCommandLine): AsyncDResult {
 	const { declaration = false } = tsConfig.options;
 	const outDir = config.useFormatDir ? fse.join(config.outDir, 'esm') : config.outDir;
 	const module = config.tsModule.esm ?? resolveModule(tsConfig) ?? 'node16';
 	const moduleResolution = MODULE_2_RESOLUTION[module];
+	const modifiedFiles: ModifiedFile[] = [];
 
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', module, '--moduleResolution', moduleResolution, '--removeComments'], { cwd: root, stdio: 'inherit' });
+	const replaceResult = await replaceDirectives(tsConfig.fileNames, 'ESM', modifiedFiles, root);
+	if(replaceResult.fails) {
+		return replaceResult;
+	}
+
+	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--declaration', String(declaration), '--outDir', outDir, '--module', module, '--moduleResolution', moduleResolution], { cwd: root, stdio: 'inherit' });
+
+	const restore = await restoreModifiedFiles(modifiedFiles, root);
+	if(restore.fails) {
+		return restore;
+	}
+
 	if(execResult.fails) {
 		return err(stringifyError(execResult.error));
 	}
