@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.9.0 | 2026-08-30
+- add directive comments
+- add unit tests
+
 ## v0.8.4 | 2026-08-28
 - fix requirements in README.md
 - use self to package for distribution
