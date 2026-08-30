@@ -5,11 +5,12 @@ import { javascript, regexp } from '@zokugun/eslint-config-js';
 import { markdown } from '@zokugun/eslint-config-md';
 import { nodejs } from '@zokugun/eslint-config-nodejs';
 import { importX, perfectionist, stylistic } from '@zokugun/eslint-config-style';
+import { vitest } from '@zokugun/eslint-config-test';
 import { typescript } from '@zokugun/eslint-config-ts';
 
 export default configure([
 	// configdotts/Ignore rules
-	ignores(),
+	ignores('test/fixtures/**'),
 	gitignore(),
 
 	// configdotts/Documentation rules
@@ -27,6 +28,7 @@ export default configure([
 	regexp(),
 
 	// configdotts/Testing rules
+	vitest(),
 
 	// configdotts/Sorting and stylistic rules
 	importX(),

@@ -1,0 +1,42 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+    feature: feature.ts
+  format:
+    - esm
+    - cjs
+  outDir: lib
+/input/package.json: |
+  {
+    "main": "old.js",
+    "module": "old.mjs",
+    "typesVersions": {}
+  }
+
+
+
+/output/package.json: |
+  {
+    "exports": {
+      ".": {
+        "import": "./lib/esm/index.mjs",
+        "require": "./lib/cjs/index.cjs"
+      },
+      "./feature": {
+        "import": "./lib/esm/feature.mjs",
+        "require": "./lib/cjs/feature.cjs"
+      }
+    },
+    "module": "lib/esm/index.mjs",
+    "main": "lib/cjs/index.cjs",
+    "typesVersions": {
+      "*": {
+        ".": [
+          "./lib/cjs/index.d.cts"
+        ],
+        "feature": [
+          "./lib/cjs/feature.d.cts"
+        ]
+      }
+    }
+  }

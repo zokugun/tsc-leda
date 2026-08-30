@@ -1,0 +1,37 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+  format:
+    - esm
+    - cjs
+  outDir: dist
+/input/package.json: |
+  {
+    "type": "module"
+  }
+/input/src/tsconfig.json: |
+  {
+    "compilerOptions": {
+      "declaration": true,
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "target": "ES2022"
+    },
+    "include": ["*.ts"]
+  }
+/input/src/index.ts: |
+  export const answer = 42;
+
+
+
+/output/dist/cjs/index.cjs: |
+  "use strict";
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.answer = void 0;
+  exports.answer = 42;
+/output/dist/cjs/index.d.cts: |
+  export declare const answer = 42;
+/output/dist/esm/index.mjs: |
+  export const answer = 42;
+/output/dist/esm/index.d.mts: |
+  export declare const answer = 42;

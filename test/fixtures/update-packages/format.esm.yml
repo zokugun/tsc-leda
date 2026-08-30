@@ -1,0 +1,27 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+    feature: feature.ts
+  format: esm
+  outDir: dist
+/input/package.json: |
+  {
+    "main": "old.js",
+    "module": "old.mjs",
+    "typesVersions": {}
+  }
+
+
+
+/output/package.json: |
+  {
+    "exports": {
+      ".": {
+        "import": "./dist/index.mjs"
+      },
+      "./feature": {
+        "import": "./dist/feature.mjs"
+      }
+    },
+    "module": "dist/index.mjs"
+  }

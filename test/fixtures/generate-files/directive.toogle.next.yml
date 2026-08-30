@@ -1,0 +1,42 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+  format:
+    - esm
+    - cjs
+  outDir: dist
+/input/package.json: |
+  {
+    "type": "module"
+  }
+/input/src/tsconfig.json: |
+  {
+    "compilerOptions": {
+      "declaration": true,
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "target": "ES2022"
+    },
+    "include": ["*.ts"]
+  }
+/input/src/index.ts: |
+  // tsc-leda-comment-next-2-lines-if-commonjs
+  import { dirname } from 'node:path';
+  import { fileURLToPath } from 'node:url';
+
+  // tsc-leda-toggle-next-line-if-commonjs
+  // const MODULE_DIRECTORY = `${__dirname}/`;
+  const MODULE_DIRECTORY = `${dirname(fileURLToPath(import.meta.url))}/`;
+
+
+
+/output/dist/cjs/index.cjs: |
+  const MODULE_DIRECTORY = `${__dirname}/`;
+/output/dist/cjs/index.d.cts: |
+  declare const MODULE_DIRECTORY: string;
+/output/dist/esm/index.mjs: |
+  import { dirname } from 'node:path';
+  import { fileURLToPath } from 'node:url';
+  const MODULE_DIRECTORY = `${dirname(fileURLToPath(import.meta.url))}/`;
+/output/dist/esm/index.d.mts: |
+  export {};

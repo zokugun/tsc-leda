@@ -14,5 +14,9 @@ artifacts:
     version: 0.9.5
   "@daiyam/artifact-npm-zokugun":
     version: 0.3.6
+  "@daiyam/artifact-test-vitest-ts":
+    version: 0.6.6
+    features:
+      - test
   "@daiyam/artifact-gh-issuehub":
     version: 0.6.6

@@ -1,0 +1,43 @@
+/input/.tscledarc.json: |
+  {
+    "entry": {
+      ".": "index.ts",
+      "feature": "feature.ts"
+    },
+    "format": ["cjs", "esm"],
+    "outDir": "dist"
+  }
+/input/package.json: |
+  {
+    "main": "old.js",
+    "module": "old.mjs",
+    "typesVersions": {}
+  }
+
+
+
+/output/package.json: |
+  {
+    "exports": {
+      ".": {
+        "import": "./dist/esm/index.mjs",
+        "require": "./dist/cjs/index.cjs"
+      },
+      "./feature": {
+        "import": "./dist/esm/feature.mjs",
+        "require": "./dist/cjs/feature.cjs"
+      }
+    },
+    "module": "dist/esm/index.mjs",
+    "main": "dist/cjs/index.cjs",
+    "typesVersions": {
+      "*": {
+        ".": [
+          "./dist/cjs/index.d.cts"
+        ],
+        "feature": [
+          "./dist/cjs/feature.d.cts"
+        ]
+      }
+    }
+  }

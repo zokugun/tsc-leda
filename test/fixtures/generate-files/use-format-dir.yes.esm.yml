@@ -1,0 +1,36 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+  format: esm
+  useFormatDir: true
+/input/package.json: |
+  {
+    "type": "module"
+  }
+/input/src/tsconfig.json: |
+  {
+    "compilerOptions": {
+      "declaration": true,
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "target": "ES2022"
+    },
+    "include": ["*.ts"]
+  }
+/input/src/index.ts: |
+  export const answer = 42;
+
+
+
+/output/dist/esm/index.mjs: |
+  export const answer = 42;
+/output/dist/esm/index.d.mts: |
+  export declare const answer = 42;
+/output/dist/cjs/index.cjs:
+  error: "ENOENT: no such file or directory"
+/output/dist/cjs/index.d.cts:
+  error: "ENOENT: no such file or directory"
+/output/dist/index.mjs:
+  error: "ENOENT: no such file or directory"
+/output/dist/index.d.mts:
+  error: "ENOENT: no such file or directory"
