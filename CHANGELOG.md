@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.1 | 2026-10-21
+- replace aliases defined in extended `tsconfig.json` or in `package.json`
+
 ## v0.9.0 | 2026-08-30
 - add directive comments
 - add unit tests
