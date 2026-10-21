@@ -9,7 +9,7 @@ import YAML from 'yaml';
 import { generateFiles } from '#/commands/generate-files/generate-files.js';
 import { withTempProject } from './utils/with-temp-project.js';
 
-// const DEBUG = process.env.DEBUG === '1' || process.env.DEBUG === 'true' || process.env.DEBUG === 'on'
+const DEBUG = process.env.DEBUG === '1' || process.env.DEBUG === 'true' || process.env.DEBUG === 'on';
 const PROJECT_ROOT = fse.resolve(import.meta.dirname, '..');
 const FIXTURE_ROOT = fse.join('.', 'test', 'fixtures', 'generate-files');
 
@@ -66,6 +66,10 @@ for(const file of files.value) {
 				const result = await fse.readFileAsync(fse.join(root, file), 'utf8');
 
 				if(isString(data)) {
+					if(DEBUG && result.fails) {
+						console.log(`Expecting file at "${file}"`);
+					}
+
 					expect(result.fails).to.be.false;
 					expect(result.value).to.eql(data);
 				}

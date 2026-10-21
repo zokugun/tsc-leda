@@ -45,7 +45,7 @@ export async function generateFiles(): Promise<void> {
 
 	const parsedTSConfig = ts.parseJsonConfigFileContent(rawTSConfig.config, ts.sys, fse.parentPath(tsConfigFile.value));
 
-	const aliases = buildAliases(tsConfigFile.value, parsedTSConfig);
+	const aliases = await buildAliases(root, parsedTSConfig);
 	if(aliases.fails) {
 		logger.fatal(aliases.error);
 	}

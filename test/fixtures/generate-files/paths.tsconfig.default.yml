@@ -1,0 +1,59 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+  format:
+    - esm
+    - cjs
+  outDir: dist
+/input/package.json: |
+  {
+    "type": "module"
+  }
+/input/src/tsconfig.json: |
+  {
+    "compilerOptions": {
+      "outDir": "../.src",
+      "rootDir": ".",
+
+      "declaration": true,
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "target": "ES2022",
+      "paths": {
+        "#utils/*": ["./utils/*"]
+      },
+    },
+  }
+/input/src/index.ts: |
+  import { random } from '#utils/random.js';
+  export const answer = random();
+/input/src/utils/random.ts: |
+  export function random(): number {
+    return 42;
+  }
+
+
+/output/dist/cjs/index.cjs: |
+  "use strict";
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.answer = void 0;
+  const random_js_1 = require("./utils/random.cjs");
+  exports.answer = (0, random_js_1.random)();
+/output/dist/cjs/index.d.cts: |
+  export declare const answer: number;
+/output/dist/cjs/utils/random.cjs: |
+  "use strict";
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.random = random;
+  function random() {
+      return 42;
+  }
+/output/dist/esm/index.mjs: |
+  import { random } from './utils/random.mjs';
+  export const answer = random();
+/output/dist/esm/index.d.mts: |
+  export declare const answer: number;
+/output/dist/esm/utils/random.mjs: |
+  export function random() {
+      return 42;
+  }
