@@ -13,6 +13,8 @@ export async function withTempProject(run: (root: string) => Promise<void>): Pro
 	const root = result.value;
 	const originalCwd = process.cwd();
 
+	console.log(`temp dir: ${root}`)
+
 	try {
 		process.chdir(root);
 
