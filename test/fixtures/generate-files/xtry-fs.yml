@@ -1,0 +1,54 @@
+/input/.tscledarc.yml: |
+  entry:
+    .: index.ts
+  format:
+    - esm
+    - cjs
+/input/package.json: |
+  {
+    "type": "module"
+  }
+/input/src/tsconfig.json: |
+  {
+    "compilerOptions": {
+      "declaration": true,
+      "module": "NodeNext",
+      "moduleResolution": "NodeNext",
+      "target": "ES2022"
+    },
+    "include": ["*.ts"]
+  }
+/input/src/index.ts: |
+  import fsa from 'node:fs/promises';
+  import { type AsyncFunction, xtryify } from '@zokugun/xtry/async';
+
+  const xtryifyFs = <Fn extends (...args: any[]) => any>(fn: AsyncFunction<Fn>) => xtryify<NodeJS.ErrnoException, Fn>(fn);
+
+  export const chown = xtryifyFs(fsa.chown);
+
+
+
+/output/dist/cjs/index.cjs: |
+  "use strict";
+  var __importDefault = (this && this.__importDefault) || function (mod) {
+      return (mod && mod.__esModule) ? mod : { "default": mod };
+  };
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.chown = void 0;
+  const promises_1 = __importDefault(require("node:fs/promises"));
+  const async_1 = require("@zokugun/xtry/async");
+  const xtryifyFs = (fn) => (0, async_1.xtryify)(fn);
+  exports.chown = xtryifyFs(promises_1.default.chown);
+/output/dist/cjs/index.d.cts: |
+  import { type PathLike } from "fs";
+  import { type AsyncFunctionResult } from "@zokugun/xtry/async";
+  export declare const chown: (path: PathLike, uid: number, gid: number) => AsyncFunctionResult<(path: PathLike, uid: number, gid: number) => Promise<void>, NodeJS.ErrnoException>;
+/output/dist/esm/index.mjs: |
+  import fsa from 'node:fs/promises';
+  import { xtryify } from '@zokugun/xtry/async';
+  const xtryifyFs = (fn) => xtryify(fn);
+  export const chown = xtryifyFs(fsa.chown);
+/output/dist/esm/index.d.mts: |
+  import { type PathLike } from "fs";
+  import { type AsyncFunctionResult } from "@zokugun/xtry/async";
+  export declare const chown: (path: PathLike, uid: number, gid: number) => AsyncFunctionResult<(path: PathLike, uid: number, gid: number) => Promise<void>, NodeJS.ErrnoException>;
