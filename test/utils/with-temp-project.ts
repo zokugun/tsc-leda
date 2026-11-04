@@ -20,6 +20,9 @@ export async function withTempProject(run: (root: string) => Promise<void>): Pro
 
 		await run(root);
 	}
+	catch(error) {
+		console.log(error)
+	}
 	finally {
 		process.chdir(originalCwd);
 
