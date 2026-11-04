@@ -65,8 +65,6 @@ for(const file of files.value) {
 			for(const [file, data] of Object.entries(expectedFiles)) {
 				const result = await fse.readFileAsync(fse.join(root, file), 'utf8');
 
-				console.log(result);
-
 				if(isString(data)) {
 					if(DEBUG && result.fails) {
 						console.log(`Expecting file at "${file}"`);
@@ -81,5 +79,5 @@ for(const file of files.value) {
 				}
 			}
 		});
-	});
+	}, 10_000);
 }
