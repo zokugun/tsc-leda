@@ -79,5 +79,5 @@ for(const file of files.value) {
 				}
 			}
 		});
-	}, 10_000);
+	}, 20_000);
 }
