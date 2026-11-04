@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog][keepachangelog], and this project adhe
 [Unreleased]
 ------------
 
+### Fixed
+
+- windows: correctly build relative paths
+
 ### Changed
 
 - update `@zokugun/xtry` dependency to deduplicate/reduce generated types.
