@@ -50,10 +50,10 @@ for(const file of files.value) {
 			const expectedFiles: Record<string, string | { error: string }> = {};
 
 			for(const [key, data] of Object.entries(manifest)) {
-				if(key.startsWith('/input/')) {
+				if(key.startsWith('/input/') || key.startsWith('\\input\\')) {
 					await fse.outputFileAsync(fse.join(root, key.slice(7)), data as string);
 				}
-				else if(key.startsWith('/output/')) {
+				else if(key.startsWith('/output/') || key.startsWith('\\output\\')) {
 					expectedFiles[key.slice(8)] = data as string;
 				}
 			}
