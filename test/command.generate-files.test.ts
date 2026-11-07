@@ -27,6 +27,10 @@ if(files.fails) {
 for(const file of files.value) {
 	const name = fse.leafName(file.path, 1);
 
+	if(name.startsWith('windows') && process.platform !== 'win32') {
+		continue;
+	}
+
 	const readResult = fse.readFileSync(file.path, 'utf8');
 	if(readResult.fails) {
 		throw readResult.error;
