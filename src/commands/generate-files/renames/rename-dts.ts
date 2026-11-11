@@ -8,7 +8,7 @@ export async function renameDTS(dirPath: string, newExtname: string, replace: Co
 	const files = await fse.walk(dirPath, {
 		asPaths: true,
 		collect: true,
-		glob: fse.gb.micro('**/*.d.ts'),
+		glob: fse.gb.pico('**/*.d.ts'),
 		traverseAll: true,
 	});
 

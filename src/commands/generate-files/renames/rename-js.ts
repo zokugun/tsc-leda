@@ -8,7 +8,7 @@ export async function renameJS(dirPath: string, newExtname: string, replace: Com
 	const files = await fse.walk(dirPath, {
 		asPaths: true,
 		collect: true,
-		glob: fse.gb.micro('**/*.js'),
+		glob: fse.gb.pico('**/*.js'),
 		traverseAll: true,
 	});
 
