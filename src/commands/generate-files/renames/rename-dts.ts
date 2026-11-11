@@ -3,12 +3,20 @@ import type { Compositor } from '../types.js';
 import path from 'node:path';
 import fse from '@zokugun/fs-extra-plus/async';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
-import { globby } from 'globby';
 
 export async function renameDTS(dirPath: string, newExtname: string, replace: Compositor): AsyncDResult {
-	const files = await globby('**/*.d.ts', { cwd: dirPath });
+	const files = await fse.walk(dirPath, {
+		asPaths: true,
+		collect: true,
+		glob: fse.gb.micro('**/*.d.ts'),
+		traverseAll: true,
+	});
 
-	for(const file of files) {
+	if(files.fails) {
+		return err(stringifyError(files.error));
+	}
+
+	for(const file of files.value) {
 		const inputFile = path.join(dirPath, file);
 		const outputFile = inputFile.replace(/\.d\.ts$/, newExtname);
 

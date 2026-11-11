@@ -54,8 +54,7 @@
 		"@zokugun/is-it-type": "0.8.1",
 		"@zokugun/text-line-utils": "0.1.0",
 		"@zokugun/xtry": "0.12.2",
-		"execa": "9.6.1",
-		"globby": "14.1.0",
+		"picomatch": "4.0.7",
 		"yaml": "2.9.1"
 	},
 	"devDependencies": {

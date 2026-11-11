@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog], and this project adheres to [Semantic Versioning][semver].
 
+[Unreleased]
+------------
+
+### Changed
+
+- use `picomatch` and `@zokugun/picoexec`
+
 [v0.9.3] | 2026-11-07
 ---------------------
 
@@ -15,13 +22,14 @@ The format is based on [Keep a Changelog][keepachangelog], and this project adhe
 [v0.9.2] | 2026-11-05
 ---------------------
 
+### Changed
+
+- update `@zokugun/xtry` dependency to deduplicate/reduce generated types.
+
 ### Fixed
 
 - windows: correctly build relative paths
 
-### Changed
-
-- update `@zokugun/xtry` dependency to deduplicate/reduce generated types.
 
 [v0.9.1] | 2026-10-21
 ---------------------

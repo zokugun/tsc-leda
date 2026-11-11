@@ -3,10 +3,10 @@ import type { Config } from '#/types.js';
 import type { Alias } from '../types.js';
 import type { ModifiedFile } from '../utils/restore-modified-files.js';
 
+import { exec } from '@zokugun/cli-utils';
 import fse from '@zokugun/fs-extra-plus/path';
 import { type AsyncDResult, err, OK, stringifyError } from '@zokugun/xtry';
 
-import { exec } from '#utils/exec.js';
 import { MODULE_2_RESOLUTION } from '#utils/module.js';
 import { copySoloDTS } from '../dts/copy-solo-dts.js';
 import { replaceMTS } from '../dts/replace-mts.js';

@@ -1,19 +1,21 @@
-import fse from '@zokugun/fs-extra-plus/path';
-import { type AsyncDResult, err, ok, stringifyError } from '@zokugun/xtry';
+import type { AsyncDResult } from '@zokugun/xtry';
 
-import { exec } from '#utils/exec.js';
+import { exec } from '@zokugun/cli-utils';
+import fse from '@zokugun/fs-extra-plus/path';
+import { toLines } from '@zokugun/text-line-utils';
+import { err, ok, stringifyError } from '@zokugun/xtry';
 
 export async function findDTSFiles(root: string, tsConfigFile: string): AsyncDResult<string[]> {
-	const execResult = await exec('npx', ['tsc', '-p', tsConfigFile, '--listFilesOnly'], { cwd: root, lines: true });
-	if(execResult.fails) {
-		return err(stringifyError(execResult.error));
+	const result = await exec('npx', ['tsc', '-p', tsConfigFile, '--listFilesOnly'], { cwd: root });
+
+	if(result.fails) {
+		return err(stringifyError(result.error));
 	}
 
-	const { stdout } = execResult.value as { stdout: string[] };
 	const modulesPrefix = `node_modules${fse.separator}`;
 	const dtsFiles: string[] = [];
 
-	for(const path of stdout) {
+	for(const path of toLines(result.value.stdout)) {
 		if(!path.startsWith(root)) {
 			continue;
 		}
