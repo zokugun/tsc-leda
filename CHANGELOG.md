@@ -5,8 +5,8 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog][keepachangelog], and this project adheres to [Semantic Versioning][semver].
 
-[Unreleased]
-------------
+[v0.9.5] | 2026-11-12
+---------------------
 
 ### Chore
 
@@ -240,7 +240,8 @@ The format is based on [Keep a Changelog][keepachangelog], and this project adhe
 
 [keepachangelog]: https://keepachangelog.com/en/2.0.0/
 [semver]: https://semver.org/spec/v2.0.0.html
-[unreleased]: https://github.com/zokugun/tsc-leda/compare/v0.9.4...HEAD
+[unreleased]: https://github.com/zokugun/tsc-leda/compare/v0.9.5...HEAD
+[v0.9.5]: https://github.com/zokugun/tsc-leda/releases/tag/v0.9.5
 [v0.9.4]: https://github.com/zokugun/tsc-leda/releases/tag/v0.9.4
 [v0.9.3]: https://github.com/zokugun/tsc-leda/releases/tag/v0.9.3
 [v0.9.2]: https://github.com/zokugun/tsc-leda/releases/tag/v0.9.2
